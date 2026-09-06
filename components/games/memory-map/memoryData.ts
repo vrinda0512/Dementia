@@ -15,7 +15,7 @@ export const memoryCategories: MemoryCategoryInfo[] = [
     description: "Memories from your younger days",
     emoji: "🌄",
     color: "from-orange-400 to-amber-600",
-    position: "left-[36%] top-[8%]",
+    position: "left-[45%] top-[5%]",
   },
   {
     id: "personal",
@@ -23,7 +23,7 @@ export const memoryCategories: MemoryCategoryInfo[] = [
     description: "Things about you",
     emoji: "🌿",
     color: "from-teal-500 to-cyan-700",
-    position: "right-[7%] top-[17%]",
+    position: "right-[7%] top-[20%]",
   },
   {
     id: "food",
@@ -39,7 +39,7 @@ export const memoryCategories: MemoryCategoryInfo[] = [
     description: "Songs and musical memories",
     emoji: "🎵",
     color: "from-purple-500 to-indigo-700",
-    position: "right-[28%] bottom-[12%]",
+    position: "right-[20%] bottom-[10%]",
   },
   {
     id: "hobbies",
@@ -55,7 +55,7 @@ export const memoryCategories: MemoryCategoryInfo[] = [
     description: "Places that hold memories",
     emoji: "🗺️",
     color: "from-blue-400 to-cyan-700",
-    position: "left-[44%] bottom-[3%]",
+    position: "left-[10%] bottom-[35%]",
   },
   {
     id: "home",
