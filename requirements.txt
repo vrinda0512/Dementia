@@ -1,0 +1,16 @@
+# MEMORA — SIH 2026 Prototype
+# Current frontend/runtime requirements
+
+next
+react
+react-dom
+
+# TypeScript
+typescript
+@types/node
+@types/react
+@types/react-dom
+
+# Database & Auth
+@supabase/supabase-js
+@supabase/ssr
