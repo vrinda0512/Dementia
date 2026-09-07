@@ -22,7 +22,7 @@ export default function CaregiverProgressPage() {
 
   const chartData = metrics
     ? [...metrics].reverse().map((m) => {
-        const d = new Date(m.calculatedAt);
+        const d = new Date(m.calculatedAt || Date.now());
         return {
           day: getDayName(d),
           Overall: Math.round(

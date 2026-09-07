@@ -68,7 +68,7 @@ export function RecentActivity() {
                   </span>
                 </td>
                 <td className="py-3 px-2 text-xs text-slate-500 font-medium">
-                  {formatTime(s.startedAt)}
+                  {formatTime(s.startedAt || new Date().toISOString())}
                 </td>
                 <td className="py-3 px-2 text-right">
                   <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">

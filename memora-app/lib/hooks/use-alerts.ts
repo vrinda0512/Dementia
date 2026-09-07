@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { demoAlerts } from "@/lib/mock-data/alerts";
+import { alertService } from "@/lib/supabase/services";
 import type { Alert } from "@/lib/types";
 
 export function useAlerts() {
@@ -8,14 +8,13 @@ export function useAlerts() {
   const query = useQuery<Alert[]>({
     queryKey: ["alerts"],
     queryFn: async () => {
-      return demoAlerts;
+      return await alertService.getAlerts();
     },
-    initialData: demoAlerts,
   });
 
   const acknowledgeAlert = useMutation({
     mutationFn: async (id: string) => {
-      const alert = demoAlerts.find((a) => a.id === id);
+      const alert = query.data?.find((a) => a.id === id);
       if (alert) alert.acknowledged = true;
       return alert;
     },

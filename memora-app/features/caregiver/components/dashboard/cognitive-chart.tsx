@@ -18,7 +18,7 @@ export function CognitiveChart() {
 
   const chartData = metrics
     ? [...metrics].reverse().map((m) => {
-        const d = new Date(m.calculatedAt);
+        const d = new Date(m.calculatedAt || Date.now());
         return {
           day: getDayName(d),
           Memory: m.memoryScore,

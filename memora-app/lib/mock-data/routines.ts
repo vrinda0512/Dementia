@@ -9,6 +9,7 @@ export const demoRoutines: Routine[] = [
     description: "Wake up and stretch gently",
     location: "Bedroom",
     timeOfDay: "7:00 AM",
+    stepOrder: 1,
     order: 1,
   },
   {
@@ -19,6 +20,7 @@ export const demoRoutines: Routine[] = [
     description: "Brush teeth and freshen up",
     location: "Bathroom",
     timeOfDay: "7:15 AM",
+    stepOrder: 2,
     order: 2,
   },
   {
@@ -29,6 +31,7 @@ export const demoRoutines: Routine[] = [
     description: "Quiet morning prayer time",
     location: "Prayer Room",
     timeOfDay: "7:30 AM",
+    stepOrder: 3,
     order: 3,
   },
   {
@@ -39,6 +42,7 @@ export const demoRoutines: Routine[] = [
     description: "Have a healthy breakfast",
     location: "Dining Room",
     timeOfDay: "8:00 AM",
+    stepOrder: 4,
     order: 4,
   },
   {
@@ -49,6 +53,7 @@ export const demoRoutines: Routine[] = [
     description: "Take blood pressure medicine",
     location: "Kitchen",
     timeOfDay: "10:00 AM",
+    stepOrder: 5,
     order: 5,
   },
   {
@@ -59,6 +64,7 @@ export const demoRoutines: Routine[] = [
     description: "Go for a gentle evening walk",
     location: "Garden",
     timeOfDay: "5:00 PM",
+    stepOrder: 6,
     order: 6,
   },
 ];

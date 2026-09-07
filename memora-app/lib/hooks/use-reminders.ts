@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { demoReminders } from "@/lib/mock-data/reminders";
+import { reminderService } from "@/lib/supabase/services";
 import type { Reminder } from "@/lib/types";
 
 export function useReminders() {
@@ -8,18 +8,17 @@ export function useReminders() {
   const query = useQuery<Reminder[]>({
     queryKey: ["reminders"],
     queryFn: async () => {
-      return demoReminders;
+      return await reminderService.getReminders();
     },
-    initialData: demoReminders,
   });
 
   const toggleReminder = useMutation({
     mutationFn: async (id: string) => {
-      const rem = demoReminders.find((r) => r.id === id);
-      if (rem) {
-        rem.completed = !rem.completed;
+      const current = query.data?.find((r) => r.id === id);
+      if (current) {
+        current.completed = !current.completed;
       }
-      return rem;
+      return current;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reminders"] });
@@ -27,14 +26,13 @@ export function useReminders() {
   });
 
   const addReminder = useMutation({
-    mutationFn: async (newReminder: Omit<Reminder, "id" | "patientId" | "completed">) => {
+    mutationFn: async (newRem: Omit<Reminder, "id" | "patientId" | "completed">) => {
       const created: Reminder = {
         id: `rem-${Date.now()}`,
-        patientId: "patient-001",
+        patientId: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
         completed: false,
-        ...newReminder,
+        ...newRem,
       };
-      demoReminders.push(created);
       return created;
     },
     onSuccess: () => {
@@ -44,10 +42,7 @@ export function useReminders() {
 
   const deleteReminder = useMutation({
     mutationFn: async (id: string) => {
-      const idx = demoReminders.findIndex((r) => r.id === id);
-      if (idx !== -1) {
-        demoReminders.splice(idx, 1);
-      }
+      return true;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reminders"] });

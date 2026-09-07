@@ -1,31 +1,33 @@
 "use client";
 
-import { Menu, Bell, User, Smartphone } from "lucide-react";
+import { Menu, Smartphone } from "lucide-react";
 import Link from "next/link";
 import { useAppStore } from "@/lib/stores/app-store";
 import { getGreeting } from "@/lib/utils";
 
 export function CaregiverHeader() {
-  const { caregiver, patient, toggleSidebar } = useAppStore();
+  const { caregiver, patient, setSidebarOpen } = useAppStore();
   const greeting = getGreeting();
 
   return (
-    <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200 px-4 md:px-8 py-4 flex items-center justify-between shadow-xs">
-      <div className="flex items-center gap-4">
+    <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-slate-200 px-4 md:px-8 py-3.5 flex items-center justify-between shadow-xs">
+      <div className="flex items-center gap-3 md:gap-4">
+        {/* Mobile Hamburger Toggle Button */}
         <button
-          onClick={toggleSidebar}
-          className="md:hidden text-slate-600 hover:text-slate-900 p-1 rounded-lg hover:bg-slate-100"
-          aria-label="Toggle Navigation"
+          type="button"
+          onClick={() => setSidebarOpen(true)}
+          className="md:hidden text-slate-700 hover:text-slate-900 active:bg-slate-200 p-2.5 rounded-xl border border-slate-200 bg-slate-50 transition-all cursor-pointer touch-manipulation flex items-center justify-center active:scale-95 shadow-xs"
+          aria-label="Open Navigation Sidebar"
         >
-          <Menu className="w-6 h-6" />
+          <Menu className="w-6 h-6 text-slate-800" />
         </button>
 
         <div>
-          <h1 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">
+          <h1 className="text-lg md:text-2xl font-black text-slate-900 tracking-tight">
             {greeting}, {caregiver?.name || "Caregiver"}
           </h1>
           <div className="flex items-center gap-2 mt-0.5">
-            <span className="text-xs text-slate-500 font-medium">Patient:</span>
+            <span className="text-xs text-slate-500 font-medium hidden sm:inline">Patient:</span>
             <span className="text-xs font-bold text-slate-800">{patient?.name || "Meena Sharma"}</span>
             <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>

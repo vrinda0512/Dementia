@@ -120,7 +120,7 @@ export default function CaregiverMemoriesPage() {
                       {mem.date}
                     </span>
                   )}
-                  {mem.people.length > 0 && (
+                  {mem.people && mem.people.length > 0 && (
                     <span className="inline-flex items-center gap-1 text-sky-700 bg-sky-50 px-2.5 py-1 rounded-md border border-sky-100">
                       <Users className="w-3 h-3 text-sky-500" />
                       {mem.people.join(", ")}

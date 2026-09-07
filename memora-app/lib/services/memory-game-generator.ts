@@ -5,7 +5,7 @@ export function generateMemoryActivity(memory: Memory): GeneratedActivity {
   let options: string[] = [];
   let correctAnswer = "";
 
-  if (memory.category === "trip" && memory.people.length > 0) {
+  if (memory.category === "trip" && memory.people && memory.people.length > 0) {
     correctAnswer = memory.people[0];
     const distractor1 = "Amit";
     const distractor2 = "Suresh";
@@ -15,7 +15,7 @@ export function generateMemoryActivity(memory: Memory): GeneratedActivity {
     correctAnswer = "Momos";
     question = `What is Meena's favourite dish remembered in "${memory.title}"?`;
     options = ["Momos", "Samosa", "Dosa"].sort(() => Math.random() - 0.5);
-  } else if (memory.category === "family" && memory.people.length > 0) {
+  } else if (memory.category === "family" && memory.people && memory.people.length > 0) {
     correctAnswer = memory.people[0];
     question = `Which family member spent time with Meena in "${memory.title}"?`;
     options = [correctAnswer, "Rohan", "Vikram"].sort(() => Math.random() - 0.5);

@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { demoMetrics } from "@/lib/mock-data/metrics";
+import { metricsService } from "@/lib/supabase/services";
 import type { Metrics } from "@/lib/types";
 
 export function useMetrics() {
   return useQuery<Metrics[]>({
     queryKey: ["metrics"],
     queryFn: async () => {
-      return demoMetrics;
+      const metric = await metricsService.getMetrics();
+      return [metric];
     },
-    initialData: demoMetrics,
   });
 }

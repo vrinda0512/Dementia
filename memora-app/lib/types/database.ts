@@ -1,22 +1,43 @@
+// ─── Categories & Game Formats ────────────────────────────────
+
+export type MemoryCategory =
+  | "family"
+  | "personal"
+  | "childhood"
+  | "food"
+  | "music"
+  | "hobbies"
+  | "places"
+  | "home";
+
+export type GameFormat =
+  | "multiple-choice"
+  | "voice"
+  | "image"
+  | "fill-blank";
+
 // ─── Patient ───────────────────────────────────────────────
 export type Patient = {
   id: string;
   name: string;
-  age: number;
-  preferredLanguage: string;
-  location: string;
-  caregiverId: string;
+  age?: number;
+  preferredLanguage?: string;
+  location?: string;
+  avatar?: string;
   avatarUrl?: string;
+  caregiverId?: string;
   createdAt?: string;
+  updatedAt?: string;
 };
 
-// ─── Family Member (local/structured data) ─────────────────
+// ─── Family Member ─────────────────────────────────────────
 export type FamilyMember = {
   id: string;
   patientId: string;
   name: string;
   relationship: string;
   photoUrl?: string;
+  createdAt?: string;
 };
 
 // ─── Routine ───────────────────────────────────────────────
@@ -24,11 +45,29 @@ export type Routine = {
   id: string;
   patientId: string;
   label: string;
-  emoji: string;
-  description: string;
-  location: string;
-  timeOfDay: string;
-  order: number;
+  emoji?: string;
+  description?: string;
+  location?: string;
+  timeOfDay?: string;
+  stepOrder: number;
+  order?: number; // Alias for UI compatibility
+  active?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+// ─── Personalization Question ──────────────────────────────
+export type PersonalizationQuestion = {
+  id: string;
+  patientId?: string;
+  category: MemoryCategory;
+  question: string;
+  answer: string;
+  options?: string[];
+  format: GameFormat;
+  image?: string;
+  audio?: string;
+  createdAt?: string;
 };
 
 // ─── Game ──────────────────────────────────────────────────
@@ -36,11 +75,11 @@ export type Game = {
   id: string;
   name: string;
   type: string;
-  description: string;
+  description?: string;
   minDifficulty: number;
   maxDifficulty: number;
   active: boolean;
-  createdAt: string;
+  createdAt?: string;
 };
 
 // ─── Game Session ──────────────────────────────────────────
@@ -55,9 +94,10 @@ export type GameSession = {
   responseTime: number;
   hintsUsed: number;
   completed: boolean;
-  abandoned: boolean;
-  startedAt: string;
+  abandoned?: boolean;
+  startedAt?: string;
   completedAt?: string;
+  createdAt?: string;
 };
 
 // ─── Game Event ────────────────────────────────────────────
@@ -67,14 +107,15 @@ export type GameEvent = {
   patientId: string;
   gameId: string;
   eventType: string;
-  challengeId: string;
-  value: string;
-  responseTime: number;
-  attemptNumber: number;
-  timestamp: string;
+  challengeId?: string;
+  value?: any;
+  responseTime?: number;
+  attemptNumber?: number;
+  timestamp?: string;
+  createdAt?: string;
 };
 
-// ─── Metrics ───────────────────────────────────────────────
+// ─── Cognitive Metrics ─────────────────────────────────────
 export type Metrics = {
   id: string;
   patientId: string;
@@ -84,7 +125,8 @@ export type Metrics = {
   recognitionScore: number;
   averageAccuracy: number;
   averageResponseTime: number;
-  calculatedAt: string;
+  calculatedAt?: string;
+  createdAt?: string;
 };
 
 // ─── Reminder ──────────────────────────────────────────────
@@ -93,11 +135,13 @@ export type Reminder = {
   patientId: string;
   type: string;
   title: string;
-  description: string;
+  description?: string;
   scheduledTime: string;
   recurring?: string;
   completed: boolean;
-  active: boolean;
+  active?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 // ─── Alert ─────────────────────────────────────────────────
@@ -105,11 +149,40 @@ export type Alert = {
   id: string;
   patientId: string;
   type: string;
-  severity: "info" | "warning" | "critical";
+  severity: "low" | "medium" | "high" | "info" | "warning" | "critical";
   title: string;
   message: string;
   acknowledged: boolean;
-  createdAt: string;
+  createdAt?: string;
+  acknowledgedAt?: string;
+};
+
+// ─── Companion Interaction ─────────────────────────────────
+export type CompanionInteraction = {
+  id: string;
+  patientId: string;
+  type: string;
+  message?: string;
+  response?: string;
+  language?: string;
+  timestamp?: string;
+  createdAt?: string;
+};
+
+// ─── Routine Result ────────────────────────────────────────
+export type RoutineResult = {
+  id: string;
+  patientId: string;
+  gameId?: string;
+  score?: number;
+  accuracy?: number;
+  attempts?: number;
+  responseTime?: number;
+  difficulty?: number;
+  hintsUsed?: number;
+  completed?: boolean;
+  timestamp?: string;
+  challenges?: any;
 };
 
 // ─── Memory ────────────────────────────────────────────────
@@ -118,11 +191,11 @@ export type Memory = {
   patientId: string;
   title: string;
   description: string;
-  category: "trip" | "food" | "family" | "festival" | "hobby" | "other";
-  people: string[];
+  category: "trip" | "food" | "family" | "festival" | "hobby" | "other" | MemoryCategory;
+  people?: string[];
   date?: string;
   imageUrl?: string;
-  createdAt: string;
+  createdAt?: string;
 };
 
 // ─── Caregiver ─────────────────────────────────────────────
@@ -130,6 +203,7 @@ export type Caregiver = {
   id: string;
   name: string;
   email: string;
+  role?: string;
 };
 
 // ─── Adaptive Difficulty ───────────────────────────────────

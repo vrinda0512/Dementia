@@ -23,7 +23,7 @@ export const useAppStore = create<AppState>()(
     (set) => ({
       caregiver: demoCaregiver,
       patient: demoPatient,
-      isSidebarOpen: true,
+      isSidebarOpen: false,
       isPatientMode: false,
       activeLanguage: "English",
       setCaregiver: (caregiver) => set({ caregiver }),

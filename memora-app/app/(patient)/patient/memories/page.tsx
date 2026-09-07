@@ -41,7 +41,7 @@ export default function PatientMemoriesPage() {
               <p className="text-sm font-semibold text-slate-600 leading-relaxed">
                 {mem.description}
               </p>
-              {mem.people.length > 0 && (
+              {mem.people && mem.people.length > 0 && (
                 <div className="pt-2 text-xs font-bold text-rose-700 bg-rose-50 px-3 py-1 rounded-full border border-rose-200 inline-block">
                   With {mem.people.join(" & ")}
                 </div>

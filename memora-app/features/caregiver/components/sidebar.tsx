@@ -25,7 +25,7 @@ const navGroups = [
   {
     title: "PATIENT",
     items: [
-      { name: "Profile", href: "/caregiver/patient", icon: User },
+      { name: "Profile & Setup", href: "/caregiver/patient", icon: User },
       { name: "Memories", href: "/caregiver/memories", icon: Heart },
     ],
   },
@@ -50,22 +50,28 @@ export function CaregiverSidebar() {
 
   return (
     <>
-      {/* Mobile Backdrop */}
+      {/* Mobile Backdrop Overlay */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-xs md:hidden"
+          className="fixed inset-0 z-40 bg-slate-900/70 backdrop-blur-xs md:hidden cursor-pointer transition-opacity duration-200"
           onClick={() => setSidebarOpen(false)}
+          aria-label="Close Mobile Sidebar Backdrop"
         />
       )}
 
+      {/* Sidebar Drawer */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-slate-900 text-slate-300 flex flex-col border-r border-slate-800 transition-transform duration-200 ease-in-out md:translate-x-0 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed inset-y-0 left-0 h-full z-50 w-72 max-w-[85vw] bg-slate-900 text-slate-300 flex flex-col border-r border-slate-800 transition-transform duration-300 ease-in-out ${
+          isSidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full md:translate-x-0"
         }`}
       >
         {/* Brand Header */}
-        <div className="p-6 border-b border-slate-800 flex items-center justify-between">
-          <Link href="/caregiver/dashboard" className="flex items-center gap-3 group">
+        <div className="p-5 md:p-6 border-b border-slate-800 flex items-center justify-between">
+          <Link
+            href="/caregiver/dashboard"
+            onClick={() => setSidebarOpen(false)}
+            className="flex items-center gap-3 group"
+          >
             <div className="w-10 h-10 bg-gradient-to-tr from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-sky-500/20 group-hover:scale-105 transition-transform">
               <HeartPulse className="w-6 h-6 text-white" />
             </div>
@@ -75,15 +81,18 @@ export function CaregiverSidebar() {
             </div>
           </Link>
 
+          {/* Mobile Cross Close Button */}
           <button
+            type="button"
             onClick={() => setSidebarOpen(false)}
-            className="md:hidden text-slate-400 hover:text-white p-1"
+            className="md:hidden text-slate-400 hover:text-white active:text-white bg-slate-800/80 hover:bg-slate-800 p-2.5 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-sky-500 cursor-pointer touch-manipulation flex items-center justify-center active:scale-95"
+            aria-label="Close Sidebar"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6 text-slate-200" />
           </button>
         </div>
 
-        {/* Navigation Items */}
+        {/* Navigation Links */}
         <div className="flex-1 overflow-y-auto p-4 space-y-6">
           {navGroups.map((group, groupIdx) => (
             <div key={groupIdx} className="space-y-1">
@@ -100,10 +109,10 @@ export function CaregiverSidebar() {
                     key={item.href}
                     href={item.href}
                     onClick={() => setSidebarOpen(false)}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition-all ${
+                    className={`flex items-center gap-3 px-3.5 py-3 rounded-xl font-semibold text-sm transition-all touch-manipulation ${
                       isActive
                         ? "bg-sky-600 text-white font-bold shadow-md shadow-sky-600/30"
-                        : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+                        : "text-slate-400 hover:bg-slate-800 hover:text-slate-200 active:bg-slate-800"
                     }`}
                   >
                     <Icon className={`w-5 h-5 ${isActive ? "text-white" : "text-slate-400"}`} />
@@ -115,11 +124,12 @@ export function CaregiverSidebar() {
           ))}
         </div>
 
-        {/* Patient Switch & Settings Footer */}
+        {/* Footer Actions */}
         <div className="p-4 border-t border-slate-800 space-y-2 bg-slate-950/50">
           <Link
             href="/patient/home"
-            className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition-all transform active:scale-95"
+            onClick={() => setSidebarOpen(false)}
+            className="w-full flex items-center justify-center gap-2 px-3 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition-all transform active:scale-95 touch-manipulation"
           >
             <Smartphone className="w-4 h-4" />
             <span>Switch to Patient Mode</span>
@@ -127,7 +137,8 @@ export function CaregiverSidebar() {
 
           <Link
             href="/caregiver/settings"
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition-all ${
+            onClick={() => setSidebarOpen(false)}
+            className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm transition-all touch-manipulation ${
               pathname === "/caregiver/settings"
                 ? "bg-sky-600 text-white font-bold"
                 : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"

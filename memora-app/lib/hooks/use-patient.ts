@@ -1,17 +1,27 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { demoPatient, demoCaregiver } from "@/lib/mock-data/patient";
-import { demoFamily } from "@/lib/mock-data/family";
+import { patientService, familyService } from "@/lib/supabase/services";
 import type { Patient, FamilyMember } from "@/lib/types";
 
 export function usePatient() {
-  return useQuery<Patient>({
+  const queryClient = useQueryClient();
+
+  const query = useQuery<Patient>({
     queryKey: ["patient"],
     queryFn: async () => {
-      // Return mock data for prototype, ready for Supabase replacement
-      return demoPatient;
+      return await patientService.getPatient();
     },
-    initialData: demoPatient,
   });
+
+  const updatePatient = useMutation({
+    mutationFn: async (updates: Partial<Patient>) => {
+      return await patientService.updatePatient(updates);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["patient"] });
+    },
+  });
+
+  return { ...query, updatePatient };
 }
 
 export function useFamilyMembers() {
@@ -20,25 +30,30 @@ export function useFamilyMembers() {
   const query = useQuery<FamilyMember[]>({
     queryKey: ["family-members"],
     queryFn: async () => {
-      return demoFamily;
+      return await familyService.getFamilyMembers();
     },
-    initialData: demoFamily,
   });
 
   const addMember = useMutation({
     mutationFn: async (newMember: Omit<FamilyMember, "id" | "patientId">) => {
-      const created: FamilyMember = {
-        id: `family-${Date.now()}`,
-        patientId: "patient-001",
+      return await familyService.addFamilyMember({
         ...newMember,
-      };
-      demoFamily.push(created);
-      return created;
+        patientId: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["family-members"] });
     },
   });
 
-  return { ...query, addMember };
+  const deleteMember = useMutation({
+    mutationFn: async (id: string) => {
+      return await familyService.deleteFamilyMember(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["family-members"] });
+    },
+  });
+
+  return { ...query, addMember, deleteMember };
 }
