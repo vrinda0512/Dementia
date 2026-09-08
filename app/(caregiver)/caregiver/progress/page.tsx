@@ -45,8 +45,9 @@ export default function CaregiverProgressPage() {
 
   const gamePerformance = [
     { game: "Routine Recall", accuracy: "81%", avgTime: "8.2 sec", difficulty: "Medium (L2)" },
-    { game: "Hide the Object", accuracy: "76%", avgTime: "11.4 sec", difficulty: "Medium (L2)" },
-    { game: "Family Memory", accuracy: "91%", avgTime: "6.8 sec", difficulty: "Easy (L1)" },
+    { game: "Memory Map", accuracy: "84%", avgTime: "9.5 sec", difficulty: "Medium (L2)" },
+    { game: "Quiet Tea Room", accuracy: "88%", avgTime: "7.1 sec", difficulty: "Easy (L1)" },
+    { game: "Family Tree", accuracy: "92%", avgTime: "6.4 sec", difficulty: "Easy (L1)" },
   ];
 
   return (

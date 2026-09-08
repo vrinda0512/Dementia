@@ -19,6 +19,8 @@ export function RecentActivity() {
         return "My Journal";
       case "hide-object":
         return "Hide the Object";
+      case "family-tree":
+        return "Family Tree";
       case "family-memory":
         return "Family Memory";
       default:

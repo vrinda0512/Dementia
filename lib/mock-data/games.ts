@@ -32,6 +32,16 @@ export const demoGames: Game[] = [
     createdAt: "2026-01-01T00:00:00Z",
   },
   {
+    id: "family-tree",
+    name: "Family Tree",
+    type: "recognition",
+    description: "Match family postcards to the family tree. Exercises facial recognition and relational memory.",
+    minDifficulty: 1,
+    maxDifficulty: 3,
+    active: true,
+    createdAt: "2026-01-01T00:00:00Z",
+  },
+  {
     id: "journal-diary",
     name: "My Journal",
     type: "expression",
@@ -47,6 +57,7 @@ export const gameEmojis: Record<string, string> = {
   "routine-ordering": "🧠",
   "memory-map": "🗺️",
   "therapeutic-tea-room-2-AG": "🍵",
+  "family-tree": "🌳",
   "journal-diary": "📔",
 };
 
@@ -65,6 +76,11 @@ export const gameColors: Record<string, { bg: string; text: string; border: stri
     bg: "bg-teal-50",
     text: "text-teal-700",
     border: "border-teal-200",
+  },
+  "family-tree": {
+    bg: "bg-rose-50",
+    text: "text-rose-700",
+    border: "border-rose-200",
   },
   "journal-diary": {
     bg: "bg-violet-50",

@@ -12,6 +12,7 @@ export default function CaregiverGamesPage() {
     "routine-ordering": true,
     "memory-map": true,
     "therapeutic-tea-room-2-AG": true,
+    "family-tree": true,
     "journal-diary": true,
   });
 
@@ -48,6 +49,17 @@ export default function CaregiverGamesPage() {
       href: "/patient/games/therapeutic-tea-room-2-AG",
       color: "from-teal-500 to-cyan-600",
       bgLight: "bg-teal-50 border-teal-200",
+    },
+    {
+      id: "family-tree",
+      name: "Family Tree",
+      emoji: "🌳",
+      category: "Personal Recognition & Family",
+      description: "Match family postcards to the family tree. Exercises facial recognition and relational memory.",
+      difficulty: "Easy (Level 1)",
+      href: "/games/family-tree",
+      color: "from-rose-500 to-pink-600",
+      bgLight: "bg-rose-50 border-rose-200",
     },
     {
       id: "journal-diary",

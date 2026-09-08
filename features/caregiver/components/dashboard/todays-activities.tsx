@@ -11,22 +11,31 @@ export function TodaysActivities() {
       score: 85,
       difficulty: "Medium",
       status: "Completed",
-      color: "bg-blue-50 text-blue-700 border-blue-200",
+      color: "bg-amber-50 text-amber-700 border-amber-200",
     },
     {
-      name: "Hide the Object",
-      category: "Spatial Attention",
-      emoji: "👁️",
-      score: 72,
+      name: "Memory Map",
+      category: "Spatial Recall",
+      emoji: "🗺️",
+      score: 82,
       difficulty: "Medium",
       status: "Completed",
-      color: "bg-purple-50 text-purple-700 border-purple-200",
+      color: "bg-emerald-50 text-emerald-700 border-emerald-200",
     },
     {
-      name: "Family Memory",
+      name: "Quiet Tea Room",
+      category: "Therapeutic Calming",
+      emoji: "🍵",
+      score: 88,
+      difficulty: "Easy",
+      status: "Completed",
+      color: "bg-teal-50 text-teal-700 border-teal-200",
+    },
+    {
+      name: "Family Tree",
       category: "Personal Recognition",
-      emoji: "❤️",
-      score: 91,
+      emoji: "🌳",
+      score: 94,
       difficulty: "Easy",
       status: "Completed",
       color: "bg-rose-50 text-rose-700 border-rose-200",
@@ -41,7 +50,7 @@ export function TodaysActivities() {
           <span>Today's Activities</span>
         </h2>
         <span className="text-xs font-bold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">
-          3/3 Complete
+          {activities.length}/{activities.length} Complete
         </span>
       </div>
 

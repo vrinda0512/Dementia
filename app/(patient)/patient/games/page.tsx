@@ -37,6 +37,15 @@ export default function PatientGameSelectionPage() {
       cardBg: "bg-teal-50 border-teal-200",
     },
     {
+      id: "family-tree",
+      title: "Family Tree",
+      emoji: "🌳",
+      subtitle: "Match postcards to your family tree",
+      href: "/games/family-tree",
+      bgColor: "bg-rose-500 hover:bg-rose-600",
+      cardBg: "bg-rose-50 border-rose-200",
+    },
+    {
       id: "journal-diary",
       title: "My Journal",
       emoji: "📔",
