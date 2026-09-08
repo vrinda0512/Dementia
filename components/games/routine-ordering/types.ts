@@ -4,6 +4,9 @@ export type RoutineStep = {
   emoji: string;
   location: string;
   description: string;
+  timeOfDay?: string;
+  stepOrder?: number;
+  active?: boolean;
 };
 
 export type ChallengeType =
@@ -28,6 +31,9 @@ export type Challenge = {
   targetIds: string[];
 
   options: ChallengeOption[];
+  
+  /** Full ordered preview of the routine (optional) - used by some challenge renderers */
+  previewSequence?: ChallengeOption[];
 
   targetStepId?: string;
 
