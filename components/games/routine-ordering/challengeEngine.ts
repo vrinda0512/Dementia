@@ -80,6 +80,8 @@ export function generateChallenges(
     targetStepId: missingStep.id,
 
     correctAnswer: missingStep.id,
+    // include a full preview sequence so the UI can show the missing slot
+    previewSequence: routine.map(toOption),
 
     options: shuffle([
       toOption(missingStep),

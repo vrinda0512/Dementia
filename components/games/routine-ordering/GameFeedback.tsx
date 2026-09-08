@@ -1,6 +1,7 @@
 "use client";
 
 import { RoutineStep } from "./types";
+import RoutineIcon from "./RoutineIcon";
 
 type GameFeedbackProps = {
   selectedSteps: RoutineStep[];
@@ -61,7 +62,7 @@ export default function GameFeedback({
                         : "bg-amber-100"
                     }`}
                   >
-                    <span className="text-3xl">{step.emoji}</span>
+                    <RoutineIcon value={step.emoji} alt={step.label} className="h-10 w-10 rounded-xl" />
 
                     <span className="mt-1 text-center text-sm font-bold text-slate-700">
                       {step.label}
