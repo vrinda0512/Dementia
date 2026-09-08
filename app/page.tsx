@@ -1,3 +1,8 @@
+import { redirect } from "next/navigation";
+
+export default function Home() {
+  redirect("/games/therapeutic-tea-room");
+}
 "use client";
 
 export default function HomePage() {
