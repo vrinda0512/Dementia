@@ -11,21 +11,22 @@ export function createPhoto(): InteractiveSceneObject {
   const frameGroup = new THREE.Group();
   const outer = shadow(new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.48, 0.06), frame));
   frameGroup.add(outer);
-  const image = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.49, 0.36),
-    new THREE.MeshBasicMaterial({ color: 0xe5c996 })
-  );
-  image.position.z = 0.035;
-  frameGroup.add(image);
-  const silhouetteMaterial = new THREE.MeshBasicMaterial({ color: 0x6f5945 });
-  [-0.12, 0.08].forEach((x, index) => {
-    const head = new THREE.Mesh(new THREE.CircleGeometry(index === 0 ? 0.052 : 0.046, 18), silhouetteMaterial);
-    head.position.set(x, 0.06, 0.042);
-    frameGroup.add(head);
-    const shoulders = new THREE.Mesh(new THREE.CircleGeometry(index === 0 ? 0.1 : 0.085, 18, 0, Math.PI), silhouetteMaterial);
-    shoulders.position.set(x, -0.075, 0.042);
-    frameGroup.add(shoulders);
+
+  const textureLoader = new THREE.TextureLoader();
+  const photoTexture = textureLoader.load("/images/photoframe.webp");
+  photoTexture.colorSpace = THREE.SRGBColorSpace;
+
+  const imageMaterial = new THREE.MeshStandardMaterial({
+    map: photoTexture,
+    roughness: 0.35,
+    metalness: 0.05,
   });
+  const image = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.53, 0.39),
+    imageMaterial
+  );
+  image.position.z = 0.032;
+  frameGroup.add(image);
   const stand = shadow(new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.06, 0.2), frame));
   stand.position.set(0, -0.27, -0.08);
   stand.rotation.x = -0.36;
