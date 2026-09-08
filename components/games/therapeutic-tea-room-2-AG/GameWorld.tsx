@@ -241,6 +241,14 @@ export default function GameWorld({ audio, sessionActive, reducedMotion, memoryP
     const memoryItems = new MemoryItemSystem(scene, () => callbackRef.current.onObservationComplete());
     memoryControllerRef.current = {
       execute: (command) => {
+        if (command.type === "pan_left") {
+          controller.panLeft();
+          return;
+        }
+        if (command.type === "pan_right") {
+          controller.panRight();
+          return;
+        }
         if (command.type === "reset") {
           memoryItems.reset();
           return;
@@ -271,7 +279,13 @@ export default function GameWorld({ audio, sessionActive, reducedMotion, memoryP
       const width = host.clientWidth;
       const height = host.clientHeight;
       if (!width || !height) return;
-      camera.aspect = width / height;
+      const aspect = width / height;
+      camera.aspect = aspect;
+      if (aspect < 1) {
+        camera.fov = Math.min(65, Math.round(42 / Math.pow(aspect, 0.65)));
+      } else {
+        camera.fov = 42;
+      }
       camera.updateProjectionMatrix();
       renderer.setSize(width, height, false);
     };

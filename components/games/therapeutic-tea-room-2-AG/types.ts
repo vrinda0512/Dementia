@@ -111,7 +111,7 @@ export type MemoryGamePhase =
 
 export type MemoryWorldCommand = {
   id: number;
-  type: "observe" | "reveal" | "reset";
+  type: "observe" | "reveal" | "reset" | "pan_left" | "pan_right";
   itemId?: MemoryItemId;
   hidingPlaceId?: HidingPlaceId;
   selectedPlaceId?: HidingPlaceId;

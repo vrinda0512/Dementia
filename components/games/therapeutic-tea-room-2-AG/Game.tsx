@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Bookmark, Glasses, KeyRound, Leaf, Mail, Music2, Search, Smartphone, Volume2, VolumeX, X } from "lucide-react";
+import { Bookmark, ChevronLeft, ChevronRight, Glasses, KeyRound, Leaf, Mail, Music2, Search, Smartphone, Volume2, VolumeX, X } from "lucide-react";
 import { AudioManager } from "./AudioManager";
 import { createMemoryRound, HIDING_PLACES, MEMORY_ITEMS } from "./content/memoryRound";
 import GameWorld from "./GameWorld";
@@ -361,6 +361,30 @@ export default function TherapeuticTeaRoomGame({ context, onSessionEvent }: Ther
       )}
 
       {sessionActive && phase === "explore" && <div className={styles.guidance} aria-live="polite">{hoverLabel ? <span className={styles.hoverHint}>{hoverLabel}</span> : <span>{message}</span>}</div>}
+
+      {sessionActive && (
+        <nav className={styles.cameraControls} aria-label="Camera navigation">
+          <button
+            className={styles.cameraPanButton}
+            type="button"
+            onClick={() => sendWorldCommand({ type: "pan_left" })}
+            aria-label="Pan camera left"
+            title="Pan camera left"
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <span className={styles.cameraHint}>Look Around</span>
+          <button
+            className={styles.cameraPanButton}
+            type="button"
+            onClick={() => sendWorldCommand({ type: "pan_right" })}
+            aria-label="Pan camera right"
+            title="Pan camera right"
+          >
+            <ChevronRight size={18} />
+          </button>
+        </nav>
+      )}
 
     </main>
   );

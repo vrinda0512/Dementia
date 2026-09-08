@@ -18,6 +18,14 @@ export class CameraController {
     this.desiredPolar = THREE.MathUtils.clamp(this.desiredPolar + deltaY * 0.004, 0.93, 1.47);
   }
 
+  panLeft(step = 0.32) {
+    this.desiredAzimuth = THREE.MathUtils.clamp(this.desiredAzimuth - step, -0.78, 0.78);
+  }
+
+  panRight(step = 0.32) {
+    this.desiredAzimuth = THREE.MathUtils.clamp(this.desiredAzimuth + step, -0.78, 0.78);
+  }
+
   update(delta: number) {
     const interpolation = this.reducedMotion ? 1 : 1 - Math.exp(-delta * 8);
     this.azimuth = THREE.MathUtils.lerp(this.azimuth, this.desiredAzimuth, interpolation);

@@ -36,7 +36,6 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules",
-    "app/games/Northeast-India-Memory-Garden"
+    "node_modules"
   ]
 }
