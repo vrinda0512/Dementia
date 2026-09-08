@@ -1,6 +1,7 @@
 "use client";
 
 import { RoutineStep } from "./types";
+import RoutineIcon from "./RoutineIcon";
 
 type RoutineCardProps = {
   step: RoutineStep;
@@ -44,7 +45,7 @@ export default function RoutineCard({
 
       <div className="relative flex h-full flex-col items-center justify-center">
         <div className="mb-3 flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-amber-50 to-orange-100 text-5xl shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-2">
-          {step.emoji}
+          <RoutineIcon value={step.emoji} alt={step.label} className="h-16 w-16 rounded-2xl" />
         </div>
 
         <span className="text-center text-xl font-extrabold text-slate-800">

@@ -5,8 +5,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import ChallengeCard from "./ChallengeCard";
 import RewardBurst from "./RewardBurst";
 import RoutineWorld from "./RoutineWorld";
+import RoutineIcon from "./RoutineIcon";
 import { generateChallenges } from "./challengeEngine";
 import { ChallengeOption, ChallengeResult, RoutineGameResult, RoutineStep } from "./types";
+import "./memoryBook.css";
 
 type Props = {
   patientId: string;
@@ -30,6 +32,7 @@ export default function RoutineOrderingGame({
   routine,
   onComplete,
 }: Props) {
+  const [pageFlip, setPageFlip] = useState(false);
   const activeRoutine = useMemo(() => {
     if (routine.length <= 4) {
       return routine;
@@ -57,6 +60,8 @@ export default function RoutineOrderingGame({
 
   const [currentChallengeIndex, setCurrentChallengeIndex] =
     useState(0);
+
+  const level = Math.min(currentChallengeIndex + 1, 5);
 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
@@ -183,7 +188,9 @@ export default function RoutineOrderingGame({
         return;
       }
 
-      setSelectedIds([option.id]);
+      setSelectedIds((previous) =>
+        previous.includes(option.id) ? [] : [option.id]
+      );
     },
     [phase, currentChallenge]
   );
@@ -367,10 +374,15 @@ export default function RoutineOrderingGame({
    */
 
   const continueAfterReward = useCallback(() => {
-    const nextIndex =
-      currentChallengeIndex + 1;
+    const nextIndex = currentChallengeIndex + 1;
 
-    if (nextIndex >= challenges.length) {
+    // play a short page-flip animation between levels to mimic a memory book page turn
+    setPageFlip(true);
+
+    setTimeout(() => {
+      setPageFlip(false);
+
+      if (nextIndex >= challenges.length) {
       const totalAttempts =
         challengeResults.reduce(
           (total, item) => total + item.attempts,
@@ -432,17 +444,18 @@ export default function RoutineOrderingGame({
       setCompletedResult(finalResult);
       setPhase("complete");
 
-      onComplete?.(finalResult);
+        onComplete?.(finalResult);
 
-      return;
-    }
+        return;
+      }
 
-    setCurrentChallengeIndex(nextIndex);
-    setSelectedIds([]);
-    setHintUsed(false);
-    setCurrentAttempts(0);
-    setFeedbackMessage("");
-    setPhase("challenge");
+      setCurrentChallengeIndex(nextIndex);
+      setSelectedIds([]);
+      setHintUsed(false);
+      setCurrentAttempts(0);
+      setFeedbackMessage("");
+      setPhase("challenge");
+    }, 600);
   }, [
     currentChallengeIndex,
     challenges.length,
@@ -503,7 +516,8 @@ export default function RoutineOrderingGame({
 
   if (phase === "intro") {
     return (
-      <main className="min-h-screen bg-gradient-to-b from-amber-50 via-orange-50 to-sky-50 px-4 py-8">
+      <div className={`memory-page level-${level} ${pageFlip ? "page-flip" : ""}`}>
+          <main className="page memory-book min-h-screen bg-gradient-to-b from-amber-50 via-orange-50 to-sky-50 px-4 py-8">
         <div className="mx-auto flex min-h-[90vh] max-w-5xl items-center justify-center">
           <section className="w-full overflow-hidden rounded-[2rem] border border-white bg-white/90 shadow-2xl backdrop-blur">
             <div className="grid min-h-[620px] md:grid-cols-2">
@@ -554,7 +568,7 @@ export default function RoutineOrderingGame({
                 <button
                   type="button"
                   onClick={startJourney}
-                  className="mt-9 w-full rounded-2xl bg-slate-950 px-7 py-5 text-lg font-black text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0"
+                  className="mt-9 w-full rounded-2xl bg-amber-600 px-7 py-5 text-lg font-black text-black shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0"
                 >
                   Start My Memory Journey →
                 </button>
@@ -589,6 +603,7 @@ export default function RoutineOrderingGame({
           </section>
         </div>
       </main>
+      </div>
     );
   }
 
@@ -603,7 +618,8 @@ export default function RoutineOrderingGame({
       activeRoutine[previewIndex];
 
     return (
-      <main className="min-h-screen bg-gradient-to-b from-amber-50 via-orange-50 to-sky-50 px-4 py-6">
+      <div className={`memory-page level-${level} ${pageFlip ? "page-flip" : ""}`}>
+          <main className="page memory-book min-h-screen bg-gradient-to-b from-amber-50 via-orange-50 to-sky-50 px-4 py-6">
         <div className="mx-auto max-w-6xl">
           <TopBar
             score={sessionScore}
@@ -648,7 +664,7 @@ export default function RoutineOrderingGame({
           {currentPreviewStep && (
             <div className="mx-auto mt-5 max-w-2xl rounded-3xl border border-white bg-white p-6 text-center shadow-xl">
               <div className="text-5xl">
-                {currentPreviewStep.emoji}
+                <RoutineIcon value={currentPreviewStep.emoji} alt={currentPreviewStep.label} className="mx-auto h-16 w-16 rounded-2xl" />
               </div>
 
               <h2 className="mt-3 text-2xl font-black text-slate-900">
@@ -680,6 +696,7 @@ export default function RoutineOrderingGame({
           )}
         </div>
       </main>
+      </div>
     );
   }
 
@@ -691,8 +708,9 @@ export default function RoutineOrderingGame({
 
   if (phase === "reward") {
     return (
-      <main className="min-h-screen bg-gradient-to-b from-amber-50 via-orange-50 to-sky-50 px-4 py-8">
-        <div className="mx-auto flex min-h-[85vh] max-w-4xl items-center justify-center">
+      <div className={`memory-page level-${level} ${pageFlip ? "page-flip" : ""}`}>
+        <main className="page memory-book min-h-screen bg-gradient-to-b from-amber-50 via-orange-50 to-sky-50 px-4 py-8">
+          <div className="mx-auto flex min-h-[85vh] max-w-4xl items-center justify-center">
           <div className="relative w-full">
             <RewardBurst
               visible
@@ -737,7 +755,7 @@ export default function RoutineOrderingGame({
               <button
                 type="button"
                 onClick={continueAfterReward}
-                className="mt-8 w-full rounded-2xl bg-slate-950 px-6 py-4 font-black text-white shadow-lg transition hover:-translate-y-0.5"
+                className="mt-8 w-full rounded-2xl bg-amber-600 px-6 py-4 font-black text-black shadow-lg transition hover:-translate-y-0.5"
               >
                 Continue Journey →
               </button>
@@ -745,6 +763,7 @@ export default function RoutineOrderingGame({
           </div>
         </div>
       </main>
+      </div>
     );
   }
 
@@ -768,7 +787,8 @@ export default function RoutineOrderingGame({
       );
 
     return (
-      <main className="min-h-screen bg-gradient-to-b from-emerald-50 via-amber-50 to-orange-50 px-4 py-8">
+      <div className={`memory-page level-${level} ${pageFlip ? "page-flip" : ""}`}>
+        <main className="page memory-book min-h-screen bg-gradient-to-b from-emerald-50 via-amber-50 to-orange-50 px-4 py-8">
         <div className="mx-auto max-w-5xl">
           <div className="rounded-[2rem] border border-white bg-white/90 p-7 shadow-2xl md:p-10">
             <div className="text-center">
@@ -833,13 +853,14 @@ export default function RoutineOrderingGame({
             <button
               type="button"
               onClick={restartGame}
-              className="mx-auto mt-8 block rounded-2xl bg-slate-950 px-8 py-4 font-black text-white shadow-lg transition hover:-translate-y-0.5"
+              className="mx-auto mt-8 block rounded-2xl bg-amber-600 px-8 py-4 font-black text-black shadow-lg transition hover:-translate-y-0.5"
             >
               Play Again
             </button>
           </div>
         </div>
       </main>
+      </div>
     );
   }
 
@@ -850,7 +871,8 @@ export default function RoutineOrderingGame({
    */
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-amber-50 via-orange-50 to-sky-50 px-4 py-5">
+    <div className={`memory-page level-${level} ${pageFlip ? "page-flip" : ""}`}>
+      <main className="page memory-book min-h-screen bg-gradient-to-b from-amber-50 via-orange-50 to-sky-50 px-4 py-5">
       <div className="mx-auto max-w-6xl">
         <TopBar
           score={sessionScore}
@@ -903,6 +925,7 @@ export default function RoutineOrderingGame({
         </div>
       </div>
     </main>
+    </div>
   );
 }
 

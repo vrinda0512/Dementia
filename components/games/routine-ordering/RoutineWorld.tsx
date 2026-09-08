@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { RoutineStep } from "./types";
+import RoutineIcon from "./RoutineIcon";
 
 type RoutineWorldProps = {
   routine: RoutineStep[];
@@ -41,8 +43,19 @@ export default function RoutineWorld({
   disabled = false,
   showMemoryTrail = true,
 }: RoutineWorldProps) {
-  return (
-    <div className="relative mx-auto aspect-[16/9] w-full max-w-6xl overflow-hidden rounded-[2.5rem] border-8 border-white bg-[#f7ead8] shadow-2xl">
+  const [width, setWidth] = useState<number>(typeof window !== "undefined" ? window.innerWidth : 1200);
+
+  useEffect(() => {
+    const onResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const isMobile = width <= 640;
+
+  // Build the full illustrated world once so we can reuse for desktop and mobile scroll view
+  const worldContent = (
+    <div className="relative mx-auto aspect-[16/9] w-[1100px] overflow-hidden rounded-[2.5rem] border-8 border-white bg-[#f7ead8] shadow-2xl">
 
       {/* Sky */}
       <div className="absolute inset-0 bg-gradient-to-b from-sky-100 via-orange-50 to-amber-100" />
@@ -74,6 +87,10 @@ export default function RoutineWorld({
 
         <div className="absolute bottom-[28%] left-[12%] h-[22%] w-[28%] rounded-xl bg-sky-100" />
 
+        <div className="room-label absolute bottom-2 left-1/2 z-[60] -translate-x-1/2 rounded-full bg-white/90 px-3 py-1 shadow-md">
+          BEDROOM
+        </div>
+
       </div>
 
       {/* BATHROOM */}
@@ -83,7 +100,15 @@ export default function RoutineWorld({
           ✨
         </div>
 
+        <div className="absolute left-[28%] top-[38%] flex h-12 w-12 items-center justify-center rounded-full bg-[#dbeafe] text-2xl shadow-sm">
+          🪥
+        </div>
+
         <div className="absolute bottom-[8%] left-[18%] h-[25%] w-[64%] rounded-b-3xl bg-white shadow-lg" />
+
+        <div className="room-label absolute bottom-2 left-1/2 z-[60] -translate-x-1/2 rounded-full bg-white/90 px-3 py-1 shadow-md">
+          BATHROOM
+        </div>
 
       </div>
 
@@ -98,6 +123,10 @@ export default function RoutineWorld({
 
         <div className="absolute bottom-[32%] right-[10%] flex h-20 w-24 items-center justify-center rounded-xl bg-slate-700 text-3xl">
           🔥
+        </div>
+
+        <div className="room-label absolute bottom-2 left-1/2 z-[60] -translate-x-1/2 rounded-full bg-white/90 px-3 py-1 shadow-md">
+          KITCHEN
         </div>
 
       </div>
@@ -146,7 +175,7 @@ export default function RoutineWorld({
           <button
             key={step.id}
             type="button"
-            disabled={disabled || selected}
+            disabled={disabled}
             onClick={() => onSelect(step)}
             className={`absolute z-30 flex h-24 w-24 flex-col items-center justify-center rounded-3xl border-4 transition-all duration-300
 
@@ -156,14 +185,14 @@ export default function RoutineWorld({
                 selected
                   ? "scale-90 border-emerald-400 bg-emerald-100/90 opacity-60"
                   : isTarget && showMemoryTrail
-                    ? "animate-[memory-pulse_1.5s_ease-in-out_infinite] border-yellow-400 bg-yellow-100 shadow-[0_0_35px_rgba(250,204,21,0.8)]"
-                    : "border-white bg-white/90 shadow-xl hover:scale-110 hover:-translate-y-2"
+                    ? "animate-memory-pulse border-yellow-400 bg-yellow-100 shadow-[0_0_35px_rgba(250,204,21,0.8)]"
+                    : "border-white bg-white/90 shadow-xl hover:scale-110 hover:-translate-y-2 animate-pop-in"
               }
             `}
           >
 
             <span className="text-4xl">
-              {selected ? "✓" : step.emoji}
+              {selected ? "✓" : <RoutineIcon value={step.emoji} alt={step.label} className="h-12 w-12 rounded-xl" />}
             </span>
 
             <span className="mt-1 text-[10px] font-black text-slate-700">
@@ -190,10 +219,10 @@ export default function RoutineWorld({
             return (
               <div
                 key={id}
-                className="animate-[pop-in_0.3s_ease-out] text-center"
+                className="animate-pop-in text-center"
               >
                 <div className="text-2xl">
-                  {step?.emoji}
+                  {step && <RoutineIcon value={step.emoji} alt={step.label} className="mx-auto h-8 w-8 rounded-lg" />}
                 </div>
 
                 <div className="text-[9px] font-black text-slate-500">
@@ -208,4 +237,17 @@ export default function RoutineWorld({
 
     </div>
   );
+
+  if (isMobile) {
+    // show a horizontally scrollable scaled world so visuals remain intact on phones
+    return (
+      <div className="mx-auto w-full overflow-x-auto -mx-4 px-4 touch-pan-x">
+        <div className="inline-block transform-gpu scale-75 origin-top-left">
+          {worldContent}
+        </div>
+      </div>
+    );
+  }
+
+  return worldContent;
 }

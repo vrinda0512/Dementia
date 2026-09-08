@@ -4,6 +4,7 @@ import {
   Challenge,
   ChallengeOption,
 } from "./types";
+import RoutineIcon from "./RoutineIcon";
 
 type ChallengeCardProps = {
   challenge: Challenge;
@@ -108,7 +109,7 @@ export default function ChallengeCard({
                         </span>
 
                         <span className="mr-2 text-2xl">
-                          {option.emoji}
+                          <RoutineIcon value={option.emoji} alt={option.label} className="inline-block h-8 w-8 rounded-lg align-middle" />
                         </span>
 
                         <span className="font-bold">
@@ -129,58 +130,89 @@ export default function ChallengeCard({
 
       {/* MISSING / BEFORE / LOCATION */}
 
-      {challenge.type !== "sequence" &&
+          {challenge.type !== "sequence" &&
         challenge.type !== "rebuild" && (
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="mt-8">
 
-            {challenge.options.map(
-              (option) => {
+            {/* For missing-step challenges, render the full routine with a blank placeholder */}
+            {challenge.type === "missing" && challenge.previewSequence && (
+              <div className="mb-4 flex items-center justify-center overflow-auto">
+                {challenge.previewSequence.map((step) => {
+                  const isMissing = step.id === challenge.targetStepId;
 
-                const selected =
-                  selectedIds.includes(
-                    option.id
+                  return (
+                    <div
+                      key={step.id}
+                      className={`mx-1 inline-flex h-20 min-w-[88px] flex-col items-center justify-center rounded-2xl border-2 p-3 text-center transition-all ${
+                        isMissing
+                          ? "border-dashed border-amber-300 bg-amber-50"
+                          : "bg-white border-slate-100"
+                      }`}
+                    >
+                      <div className="text-2xl">
+                        {isMissing ? "❓" : <RoutineIcon value={step.emoji} alt={step.label} className="mx-auto h-8 w-8 rounded-lg" />}
+                      </div>
+
+                      <div className="mt-1 text-xs font-black text-slate-700">
+                        {isMissing ? "Missing" : step.label}
+                      </div>
+                    </div>
                   );
-
-                return (
-                  <button
-                    key={option.id}
-                    type="button"
-                    disabled={disabled}
-                    onClick={() =>
-                      onSelect(option)
-                    }
-                    className={`group flex min-h-28 items-center gap-5 rounded-3xl border-2 p-5 text-left transition-all duration-200
-
-                      ${
-                        selected
-                          ? "border-orange-400 bg-orange-50 shadow-lg"
-                          : "border-slate-100 bg-white hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl"
-                      }
-                    `}
-                  >
-
-                    <span className="text-5xl transition-transform group-hover:scale-110">
-                      {option.emoji}
-                    </span>
-
-                    <span>
-                      <span className="block text-lg font-black text-slate-900">
-                        {option.label}
-                      </span>
-
-                      {challenge.type ===
-                        "location" && (
-                        <span className="text-sm text-slate-400">
-                          Choose this place
-                        </span>
-                      )}
-                    </span>
-
-                  </button>
-                );
-              }
+                })}
+              </div>
             )}
 
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+              {challenge.options.map(
+                (option) => {
+
+                  const selected =
+                    selectedIds.includes(
+                      option.id
+                    );
+
+                  return (
+                    <button
+                      key={option.id}
+                      type="button"
+                      disabled={disabled}
+                      onClick={() =>
+                        onSelect(option)
+                      }
+                      className={`group flex min-h-28 items-center gap-5 rounded-3xl border-2 p-5 text-left transition-all duration-200
+
+                        ${
+                          selected
+                            ? "border-orange-400 bg-orange-50 shadow-lg"
+                            : "border-slate-100 bg-white hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl"
+                        }
+                      `}
+                    >
+
+                      <span className="text-5xl transition-transform group-hover:scale-110">
+                        <RoutineIcon value={option.emoji} alt={option.label} className="h-14 w-14 rounded-xl" />
+                      </span>
+
+                      <span>
+                        <span className="block text-lg font-black text-slate-900">
+                          {option.label}
+                        </span>
+
+                        {challenge.type ===
+                          "location" && (
+                          <span className="text-sm text-slate-400">
+                            Choose this place
+                          </span>
+                        )}
+                      </span>
+
+                    </button>
+                  );
+                }
+              )}
+
+            </div>
           </div>
         )}
 
@@ -203,7 +235,7 @@ export default function ChallengeCard({
                 <button
                   key={option.id}
                   type="button"
-                  disabled={disabled || selected}
+                  disabled={disabled}
                   onClick={() =>
                     onSelect(option)
                   }
@@ -211,7 +243,7 @@ export default function ChallengeCard({
 
                     ${
                       selected
-                        ? "scale-95 border-emerald-300 bg-emerald-50 opacity-50"
+                        ? "scale-95 border-emerald-300 bg-emerald-50 opacity-80"
                         : "border-slate-100 bg-white hover:-translate-y-2 hover:border-orange-200 hover:shadow-xl"
                     }
                   `}
@@ -220,7 +252,7 @@ export default function ChallengeCard({
                   <span className="text-5xl">
                     {selected
                       ? "✓"
-                      : option.emoji}
+                      : <RoutineIcon value={option.emoji} alt={option.label} className="h-14 w-14 rounded-xl" />}
                   </span>
 
                   <span className="mt-3 text-center text-sm font-black text-slate-700">
@@ -244,7 +276,7 @@ export default function ChallengeCard({
           disabled ||
           selectedIds.length === 0
         }
-        className="mt-8 w-full rounded-2xl bg-slate-900 px-6 py-5 text-xl font-black text-white shadow-xl transition hover:-translate-y-1 hover:shadow-2xl disabled:cursor-not-allowed disabled:opacity-30"
+        className="mt-8 w-full rounded-2xl bg-amber-600 px-6 py-5 text-xl font-black text-black shadow-xl transition hover:-translate-y-1 hover:shadow-2xl disabled:cursor-not-allowed disabled:opacity-30"
       >
         Check My Memory →
       </button>
