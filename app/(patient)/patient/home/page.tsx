@@ -8,7 +8,7 @@ import { useTranslation } from "@/lib/i18n/use-translation";
 import { useAppStore } from "@/lib/stores/app-store";
 import { PATIENT_LANGUAGES } from "@/lib/voice/languages";
 import { getGreeting } from "@/lib/utils";
-import { Play, Sparkles, CheckCircle2 } from "lucide-react";
+import { Play, Sparkles, CheckCircle2, MapPinned } from "lucide-react";
 
 export default function PatientHomePage() {
   const { data: patient } = usePatient();
@@ -119,6 +119,24 @@ export default function PatientHomePage() {
         >
           <Sparkles className="w-5 h-5 text-amber-500" />
           <span>{isHindi ? "सभी दैनिक गतिविधियां देखें →" : "See All Daily Activities →"}</span>
+        </Link>
+      </div>
+
+      <div className="max-w-md mx-auto">
+        <Link
+          href="/patient/maps"
+          className="flex items-center justify-between gap-4 rounded-2xl border border-sky-200 bg-sky-50 px-5 py-4 text-left shadow-sm transition hover:bg-sky-100"
+        >
+          <span className="flex items-center gap-3">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-500 text-white">
+              <MapPinned className="h-5 w-5" />
+            </span>
+            <span>
+              <span className="block text-sm font-black text-sky-950">Familiar places</span>
+              <span className="block text-xs font-semibold text-sky-700">See a gentle route</span>
+            </span>
+          </span>
+          <span className="text-xl font-black text-sky-600">→</span>
         </Link>
       </div>
 
