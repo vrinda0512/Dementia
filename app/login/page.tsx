@@ -10,7 +10,7 @@ import { DEFAULT_CAREGIVER_ID, DEFAULT_PATIENT_ID, isSupabaseConfigured } from "
 export default function LoginPage() {
   const router = useRouter();
   const { setRole, setCaregiver, setPatient, setPatients } = useAppStore();
-  const [email, setEmail] = useState("ananya@memora.care");
+  const [email, setEmail] = useState("ananya@smarika.care");
   const [password, setPassword] = useState("demo");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -84,7 +84,7 @@ export default function LoginPage() {
       await finishCaregiverLogin(
         DEFAULT_CAREGIVER_ID,
         "Dr. Ananya Sharma",
-        "ananya@memora.care"
+        "ananya@smarika.care"
       );
     } catch {
       setError("Could not start demo session.");
@@ -100,7 +100,7 @@ export default function LoginPage() {
           <div className="w-16 h-16 bg-gradient-to-tr from-sky-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-sky-500/30">
             <HeartPulse className="w-9 h-9 text-white" />
           </div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Memora</h1>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Smarika</h1>
           <p className="text-slate-500 text-sm mt-1">Caregiver Portal & Cognitive Monitoring</p>
         </div>
 
@@ -142,7 +142,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all text-sm"
-                placeholder={loginAs === "caregiver" ? "caregiver@memora.care" : "Meena Sharma"}
+                placeholder={loginAs === "caregiver" ? "caregiver@smarika.care" : "Meena Sharma"}
               />
             </div>
           </div>

@@ -26,6 +26,7 @@ export type Patient = {
   avatar?: string;
   avatarUrl?: string;
   caregiverId?: string;
+  phone?: string;
   createdAt?: string;
   updatedAt?: string;
 };
@@ -137,9 +138,12 @@ export type Reminder = {
   title: string;
   description?: string;
   scheduledTime: string;
+  patientPhone?: string;
+  scheduledFor?: string;
+  status?: "scheduled" | "sent" | "failed";
   //recurring?: string;
   completed: boolean;
-  //active?: boolean;
+  active?: boolean;
   createdAt?: string;
   updatedAt?: string;
 };

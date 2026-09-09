@@ -36,6 +36,7 @@ function mapPatient(data: any): Patient {
     avatar: data.avatar ?? data.avatar_url,
     avatarUrl: data.avatar ?? data.avatar_url,
     caregiverId: data.caregiver_id ?? data.caregiverId,
+    phone: data.phone ?? data.phone_number ?? data.phoneNumber,
     createdAt: data.created_at,
     updatedAt: data.updated_at,
   };
@@ -104,10 +105,11 @@ function mapReminder(item: any): Reminder {
     type: item.type || "general",
     title: item.title,
     description: item.description,
-    scheduledTime: item.scheduled_time,
-    //recurring: item.recurring,
+    scheduledTime: item.scheduled_time || item.scheduledTime,
+    patientPhone: item.patient_phone || item.patientPhone,
+    scheduledFor: item.scheduled_for || item.scheduledFor,
+    status: item.status || "scheduled",
     completed: Boolean(item.completed),
-    //active: item.active !== false,
     createdAt: item.created_at,
     updatedAt: item.updated_at,
   };
@@ -266,6 +268,7 @@ export const patientService = {
     if (updates.avatar !== undefined || updates.avatarUrl !== undefined) {
       payload.avatar = updates.avatar || updates.avatarUrl;
     }
+    if (updates.phone !== undefined) payload.phone = updates.phone;
 
     const { data, error } = await supabase
       .from("patients")
@@ -276,6 +279,32 @@ export const patientService = {
 
     if (error || !data) {
       console.error("updatePatient:", error);
+      return null;
+    }
+    return mapPatient(data);
+  },
+
+  async createPatient(patient: Omit<Patient, "id">): Promise<Patient | null> {
+    const supabase = getSupabase();
+    if (!supabase) return null;
+
+    const payload = {
+      name: patient.name,
+      age: patient.age || 70,
+      preferred_language: patient.preferredLanguage || "English",
+      location: patient.location || "New Delhi",
+      caregiver_id: patient.caregiverId,
+      phone: patient.phone || null,
+    };
+
+    const { data, error } = await supabase
+      .from("patients")
+      .insert(payload)
+      .select()
+      .single();
+
+    if (error || !data) {
+      console.error("createPatient:", error);
       return null;
     }
     return mapPatient(data);

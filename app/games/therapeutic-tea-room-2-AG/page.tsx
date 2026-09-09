@@ -29,7 +29,7 @@ const demoContext: TherapeuticGameContext = {
 export default function TherapeuticTeaRoomPage() {
   const handleSessionEvent = (event: TherapeuticSessionEvent) => {
     // The route remains the session boundary until a persistence gateway is introduced.
-    console.info("MEMORA THERAPEUTIC SESSION:", event);
+    console.info("SMARIKA THERAPEUTIC SESSION:", event);
   };
 
   return <TherapeuticTeaRoomGame context={demoContext} onSessionEvent={handleSessionEvent} />;

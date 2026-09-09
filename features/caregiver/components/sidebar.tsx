@@ -78,7 +78,7 @@ export function CaregiverSidebar() {
               <HeartPulse className="w-6 h-6 text-white" />
             </div>
             <div>
-              <span className="text-xl font-black text-white tracking-tight block">Memora</span>
+              <span className="text-xl font-black text-white tracking-tight block">Smarika</span>
               <span className="text-[10px] font-bold text-sky-400 uppercase tracking-widest block">Caregiver Mode</span>
             </div>
           </Link>

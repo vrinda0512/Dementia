@@ -46,7 +46,7 @@ function CaregiverSessionBootstrap({ children }: { children: React.ReactNode }) 
     return () => {
       cancelled = true;
     };
-  }, [role, caregiver, patient, setRole, setCaregiver, setPatients, setPatient]);
+  }, []); // Run bootstrap check once on layout mount
 
   return <>{children}</>;
 }

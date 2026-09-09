@@ -17,7 +17,7 @@
     <rect x="0" y="0" width="640" height="960" rx="8" fill="#fff3e6"/>
     <rect x="18" y="18" width="604" height="924" rx="6" fill="#fffaf0"/>
 
-    <text x="40" y="80" font-family="Georgia, serif" font-weight="700" font-size="36" fill="#7a4b2d">MEMORA</text>
+    <text x="40" y="80" font-family="Georgia, serif" font-weight="700" font-size="36" fill="#7a4b2d">SMARIKA</text>
     <text x="40" y="120" font-family="Georgia, serif" font-weight="700" font-size="20" fill="#a65e3b">Memory Journey</text>
 
     <g transform="translate(40,160)">

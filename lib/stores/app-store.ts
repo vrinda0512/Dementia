@@ -65,7 +65,7 @@ export const useAppStore = create<AppState>()(
         }),
     }),
     {
-      name: "memora-app-storage",
+      name: "smarika-app-storage",
       version: 1,
       migrate: (persistedState) => {
         const state = persistedState as Partial<Pick<

@@ -6,7 +6,7 @@ import { DiaryScene } from "./DiaryScene";
 import type { DiaryStage, JournalEntry } from "./types";
 import { useSarvamStt } from "@/lib/hooks/use-sarvam-stt";
 
-const STORAGE_KEY = "memora-journal-diary-entry-v1";
+const STORAGE_KEY = "smarika-journal-diary-entry-v1";
 const INITIAL_ENTRY: JournalEntry = { text: "", updatedAt: null };
 
 export default function JournalDiary() {
