@@ -105,7 +105,7 @@ function mapReminder(item: any): Reminder {
     title: item.title,
     description: item.description,
     scheduledTime: item.scheduled_time,
-    recurring: item.recurring,
+    //recurring: item.recurring,
     completed: Boolean(item.completed),
     //active: item.active !== false,
     createdAt: item.created_at,
@@ -542,42 +542,84 @@ export const reminderService = {
     return (data || []).map(mapReminder);
   },
 
-  async addReminder(
-    reminder: Omit<Reminder, "id" | "completed">
-  ): Promise<Reminder | null> {
-    const supabase = getSupabase();
-    if (!supabase) return null;
+//   async addReminder(
+//     reminder: Omit<Reminder, "id" | "completed">
+//   ): Promise<Reminder | null> {
+//     const supabase = getSupabase();
+//     if (!supabase) return null;
 
-    const { data, error } = await supabase
-      .from("reminders")
-      .insert({
-        patient_id: reminder.patientId,
-        type: reminder.type,
-        title: reminder.title,
-        description: reminder.description || "",
-        scheduled_time: reminder.scheduledTime,
-        recurring: reminder.recurring || "Daily",
-        completed: false,
-        //active: reminder.active !== false,
-      })
-      .select()
-      .single();
+//     const { data, error } = await supabase
+//       .from("reminders")
+//       .insert({
+//         patient_id: reminder.patientId,
+//         type: reminder.type,
+//         title: reminder.title,
+//         description: reminder.description || "",
+//         scheduled_time: reminder.scheduledTime,
+//         //recurring: reminder.recurring || "Daily",
+//         completed: false,
+//         //active: reminder.active !== false,
+//       })
+//       .select()
+//       .single();
 
-    //if (error || !data) {
-    //  console.error("addReminder:", error);
-    //  return null;
-    //}
-    if (error || !data) {
-      console.error("addReminder FULL ERROR:", error);
-      console.error(
-        "addReminder ERROR JSON:",
-        JSON.stringify(error, null, 2)
-      );
-    console.error("addReminder DATA:", data);
+//     //if (error || !data) {
+//     //  console.error("addReminder:", error);
+//     //  return null;
+//     //}
+//     if (error || !data) {
+//       console.error("addReminder FULL ERROR:", error);
+//       console.error(
+//         "addReminder ERROR JSON:",
+//         JSON.stringify(error, null, 2)
+//       );
+//     console.error("addReminder DATA:", data);
+//     return null;
+// }
+//     return mapReminder(data);
+//   },
+
+async addReminder(
+  reminder: Omit<Reminder, "id" | "completed">
+): Promise<Reminder | null> {
+  const supabase = getSupabase();
+  if (!supabase) return null;
+
+  console.log("ADDING REMINDER:", reminder);
+
+  const { data, error } = await supabase
+    .from("reminders")
+    .insert({
+      patient_id: reminder.patientId,
+      type: reminder.type,
+      title: reminder.title,
+      description: reminder.description || "",
+      scheduled_time: reminder.scheduledTime,
+      completed: false,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error("========== ADD REMINDER ERROR ==========");
+    console.error("message:", error.message);
+    console.error("details:", error.details);
+    console.error("hint:", error.hint);
+    console.error("code:", error.code);
+    console.error("========================================");
     return null;
-}
-    return mapReminder(data);
-  },
+  }
+
+  if (!data) {
+    console.error("addReminder: No data returned");
+    return null;
+  }
+
+  console.log("REMINDER ADDED SUCCESSFULLY:", data);
+
+  return mapReminder(data);
+},
+
 
   async toggleReminder(id: string, completed: boolean): Promise<boolean> {
     const supabase = getSupabase();

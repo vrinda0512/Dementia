@@ -137,9 +137,9 @@ export type Reminder = {
   title: string;
   description?: string;
   scheduledTime: string;
-  recurring?: string;
+  //recurring?: string;
   completed: boolean;
-  active?: boolean;
+  //active?: boolean;
   createdAt?: string;
   updatedAt?: string;
 };

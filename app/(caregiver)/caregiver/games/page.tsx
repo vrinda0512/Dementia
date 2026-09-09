@@ -13,11 +13,63 @@ const HREF_BY_ID: Record<string, string> = {
   "journal-diary": "/patient/games/journal-diary",
 };
 
+/** Display name + route overrides for Supabase game catalog rows. */
+const GAME_DISPLAY: Record<
+  string,
+  { name: string; href?: string; emoji?: string; colorKey?: string }
+> = {
+  "focus finder": {
+    name: "Quiet Tea Room",
+    href: "/patient/games/therapeutic-tea-room-2-AG",
+    emoji: "🍵",
+    colorKey: "therapeutic-tea-room-2-AG",
+  },
+  "memory match": {
+    name: "Family Tree",
+    href: "/games/family-tree",
+    emoji: "🌳",
+    colorKey: "family-tree",
+  },
+  "morning memory journey": {
+    name: "Routine Recall",
+    emoji: "🧠",
+    colorKey: "routine-ordering",
+    // href intentionally omitted — keep existing routing
+  },
+  "memory map": {
+    name: "Memory Map",
+    href: "/patient/games/memory-map",
+    emoji: "🗺️",
+    colorKey: "memory-map",
+  },
+};
+
+const JOURNAL_CARD = {
+  id: "journal-diary",
+  name: "My Journal",
+  type: "expression",
+  description:
+    "A guided journaling experience for self-expression. Strengthens narrative memory and emotional well-being.",
+  minDifficulty: 1,
+  maxDifficulty: 3,
+  active: true,
+};
+
 export default function CaregiverGamesPage() {
   const { data: sessions } = useGameSessions();
   const { data: dbGames, toggleActive, isLoading } = useGames();
 
-  const games = dbGames || [];
+  const games = (() => {
+    const list = [...(dbGames || [])];
+    const hasJournal = list.some(
+      (g) =>
+        g.id === "journal-diary" ||
+        g.name.toLowerCase() === "my journal" ||
+        g.name.toLowerCase() === "journal diary"
+    );
+    if (!hasJournal) list.push(JOURNAL_CARD);
+    return list;
+  })();
 
   const getStats = (gameId: string) => {
     const gameSessions = sessions?.filter((s) => s.gameId === gameId) || [];
@@ -49,14 +101,24 @@ export default function CaregiverGamesPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {games.map((game) => {
+            const override = GAME_DISPLAY[game.name.toLowerCase()];
+            const displayName = override?.name || game.name;
             const stats = getStats(game.id);
             const isActive = game.active;
-            const colors = gameColors[game.id] || {
+            const colorKey = override?.colorKey || game.id;
+            const colors = gameColors[colorKey] || {
               bg: "bg-slate-50",
               text: "text-slate-700",
               border: "border-slate-200",
             };
-            const href = HREF_BY_ID[game.id] || `/games/${game.id}`;
+            const href =
+              override?.href ||
+              HREF_BY_ID[game.id] ||
+              (game.id === "journal-diary"
+                ? "/patient/games/journal-diary"
+                : `/games/${game.id}`);
+            const emoji =
+              override?.emoji || gameEmojis[colorKey] || gameEmojis[game.id] || "🎮";
 
             return (
               <div
@@ -66,7 +128,7 @@ export default function CaregiverGamesPage() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="text-4xl p-3 bg-white rounded-2xl shadow-xs border border-slate-100">
-                      {gameEmojis[game.id] || "🎮"}
+                      {emoji}
                     </div>
                     <button
                       type="button"
@@ -74,6 +136,7 @@ export default function CaregiverGamesPage() {
                         toggleActive.mutate({ id: game.id, active: !isActive })
                       }
                       className="flex items-center gap-1.5 text-xs font-bold"
+                      disabled={game.id === "journal-diary" && !dbGames?.some((g) => g.id === game.id)}
                     >
                       {isActive ? (
                         <>
@@ -90,7 +153,7 @@ export default function CaregiverGamesPage() {
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-black text-slate-900">{game.name}</h3>
+                    <h3 className="text-xl font-black text-slate-900">{displayName}</h3>
                     <span className="text-xs font-bold text-slate-500 block mt-0.5">
                       {game.type}
                     </span>

@@ -23,8 +23,8 @@ export default function CaregiverRemindersPage() {
       title,
       description,
       scheduledTime,
-      recurring,
-      active: true,
+      //recurring,
+      //active: true,
     });
 
     setTitle("");
