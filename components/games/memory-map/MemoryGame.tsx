@@ -9,6 +9,10 @@ interface MemoryGameProps {
   onBack: () => void;
 }
 
+function answersMatch(submitted: string, expected: string) {
+  return submitted.trim().toLocaleLowerCase() === expected.trim().toLocaleLowerCase();
+}
+
 export default function MemoryGame({
   category,
   questions,
@@ -47,7 +51,7 @@ export default function MemoryGame({
     setSelectedAnswer(answer);
     setShowResult(true);
 
-    if (answer === currentQuestion.answer) {
+    if (answersMatch(answer, currentQuestion.answer)) {
       setScore((previous) => previous + 1);
     }
   };
@@ -98,6 +102,10 @@ export default function MemoryGame({
     );
   }
 
+  const isCurrentAnswerCorrect =
+    selectedAnswer !== null &&
+    answersMatch(selectedAnswer, currentQuestion.answer);
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-emerald-50 to-green-100 p-5 md:p-10">
       <div className="mx-auto max-w-3xl">
@@ -143,6 +151,14 @@ export default function MemoryGame({
         <div className="mt-8 rounded-[2rem] bg-white p-7 shadow-xl md:p-10">
           <div className="text-center">
             <div className="text-5xl">{category.emoji}</div>
+
+            {currentQuestion.image && (
+              <img
+                src={currentQuestion.image}
+                alt=""
+                className="mx-auto mt-6 max-h-64 w-full rounded-2xl object-contain"
+              />
+            )}
 
             <p className="mt-5 text-2xl font-bold leading-relaxed text-slate-800 md:text-3xl">
               {currentQuestion.question}
@@ -192,22 +208,58 @@ export default function MemoryGame({
               </div>
             )}
 
+          {(currentQuestion.format === "fill-blank" ||
+            currentQuestion.format === "image") && (
+            <form
+              className="mt-10 space-y-4"
+              onSubmit={(event) => {
+                event.preventDefault();
+                const answer = selectedAnswer?.trim();
+                if (answer) handleAnswer(answer);
+              }}
+            >
+              <label
+                htmlFor="memory-answer"
+                className="block text-lg font-semibold text-slate-700"
+              >
+                Your answer
+              </label>
+              <input
+                id="memory-answer"
+                type="text"
+                value={selectedAnswer ?? ""}
+                onChange={(event) => setSelectedAnswer(event.target.value)}
+                disabled={showResult}
+                autoComplete="off"
+                className="w-full rounded-2xl border-2 border-slate-200 px-5 py-4 text-lg text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 disabled:bg-slate-100"
+                placeholder="Type your answer"
+              />
+              <button
+                type="submit"
+                disabled={showResult || !selectedAnswer?.trim()}
+                className="w-full rounded-2xl bg-emerald-600 px-6 py-4 text-lg font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+              >
+                Check Answer
+              </button>
+            </form>
+          )}
+
           {/* Result */}
           {showResult && (
             <div
               className={`mt-7 rounded-2xl p-5 ${
-                selectedAnswer === currentQuestion.answer
+                isCurrentAnswerCorrect
                   ? "bg-emerald-50"
                   : "bg-amber-50"
               }`}
             >
               <p className="text-lg font-bold text-slate-800">
-                {selectedAnswer === currentQuestion.answer
+                {isCurrentAnswerCorrect
                   ? "Wonderful! You remembered it. ❤️"
                   : "That's okay. Let's remember it together."}
               </p>
 
-              {selectedAnswer !== currentQuestion.answer && (
+              {!isCurrentAnswerCorrect && (
                 <p className="mt-2 text-slate-600">
                   The answer was{" "}
                   <strong>{currentQuestion.answer}</strong>.

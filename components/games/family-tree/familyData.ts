@@ -24,6 +24,16 @@ const FALLBACK_PHOTOS: Record<string, string> = {
   brother: "/family/brother.jpg",
 };
 
+const TREE_RELATIONSHIPS: FamilyRelationship[] = [
+  "grandmother",
+  "grandfather",
+  "mother",
+  "father",
+  "me",
+  "sister",
+  "brother",
+];
+
 /** Bundled demo used only when Supabase has no family_members for the patient. */
 export const familyMembers: FamilyMember[] = [
   {
@@ -99,6 +109,20 @@ export function mapDbFamilyToGameMembers(
       photo: row.photoUrl || FALLBACK_PHOTOS[rel] || "/family/me.jpg",
       position,
     };
+  });
+}
+
+export function mapMembersToTreeMembers(members: FamilyMember[]): FamilyMember[] {
+  return TREE_RELATIONSHIPS.flatMap((relationship) => {
+    const member = members.find((item) => item.relationship === relationship);
+    if (!member) return [];
+
+    return [{
+      ...member,
+      name: relationship,
+      relationship,
+      photo: FALLBACK_PHOTOS[relationship],
+    }];
   });
 }
 

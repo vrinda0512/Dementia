@@ -485,6 +485,7 @@ export const questionService = {
         answer: question.answer,
         options: question.options || [],
         format: question.format,
+        image: question.image || null,
       })
       .select()
       .single();
@@ -722,7 +723,12 @@ export const memoryService = {
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("getMemories:", error);
+      console.error("getMemories:", {
+        code: error.code,
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+      });
       return [];
     }
     return (data || []).map(mapMemory);

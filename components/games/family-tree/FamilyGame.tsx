@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { loadFamilyForGame } from "./familyData";
+import { loadFamilyForGame, mapMembersToTreeMembers } from "./familyData";
 import { FamilyMember } from "./types";
 import FamilyTree from "./FamilyTree";
 import FamilyPostcard from "./FamilyPostcard";
@@ -106,6 +106,7 @@ export default function FamilyGame() {
   };
 
   const isComplete = members.length > 0 && matchedMembers.length === members.length;
+  const treeMembers = mapMembersToTreeMembers(members);
 
   const handleRestart = () => {
     setSelectedMember(null);
@@ -175,7 +176,7 @@ export default function FamilyGame() {
           className="rounded-[2.25rem] border border-white/80 bg-white/45 p-2 shadow-[0_20px_60px_rgba(73,92,62,0.14)] backdrop-blur-sm sm:p-4"
         >
           <FamilyTree
-            members={members}
+            members={treeMembers}
             matchedMemberIds={matchedMembers}
             selectedMemberId={selectedSource === "tree" ? selectedMember?.id ?? null : null}
             incorrectMemberId={incorrectTreeMemberId}
