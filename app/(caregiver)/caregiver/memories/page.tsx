@@ -85,6 +85,12 @@ export default function CaregiverMemoriesPage() {
         </button>
       </div>
 
+      <div className="flex min-h-[220px] items-center justify-center rounded-3xl border border-dashed border-slate-300 bg-white/70 px-6 py-12 text-center shadow-xs">
+        <p className="text-2xl font-black uppercase tracking-wide text-slate-500">
+          To be implemented soon
+        </p>
+      </div>
+
       {/* Memories Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {memories?.map((mem) => (
