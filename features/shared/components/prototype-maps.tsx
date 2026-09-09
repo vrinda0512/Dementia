@@ -198,7 +198,7 @@ function SpeakButton({ text, autoPlay }: { text: string; autoPlay?: boolean }) {
     <button
       type="button"
       onClick={speaking ? stop : speak}
-      className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 shadow-sm transition hover:border-sky-300 hover:text-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-400"
+      className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 shadow-sm transition hover:border-sky-300 hover:text-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-400 cursor-pointer"
       aria-label={speaking ? "Stop voice directions" : "Listen to voice directions"}
     >
       {speaking ? <VolumeX className="h-4 w-4 text-rose-500 animate-pulse" /> : <Volume2 className="h-4 w-4 text-sky-600" />}
@@ -322,6 +322,73 @@ export function PrototypeMaps({ mode = "caregiver" }: { mode?: "caregiver" | "pa
             </span>
           </div>
 
+          {/* Direction Instruction Banner (Positioned ABOVE map canvas so nothing is overlapped) */}
+          {routeStarted && (
+            <div className="border-b border-sky-200 bg-gradient-to-r from-sky-50 via-sky-50/90 to-blue-50 p-4 sm:p-5">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sky-600 text-white shadow-sm">
+                    <Navigation className="h-5 w-5 rotate-45 fill-white" />
+                  </span>
+                  <div>
+                    <span className="text-[11px] font-black uppercase tracking-wider text-sky-700">
+                      Step {routeStep + 1} of {directions.length}
+                    </span>
+                    <p className="text-base font-black leading-snug text-slate-800 sm:text-lg">
+                      {currentDirection}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between gap-2 sm:justify-end">
+                  <SpeakButton text={currentDirection} autoPlay={isPlaying} />
+
+                  {/* Step Controls */}
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={prevStep}
+                      disabled={routeStep === 0}
+                      className="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 disabled:opacity-40 disabled:hover:bg-white cursor-pointer disabled:cursor-not-allowed"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                      Prev
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={togglePlay}
+                      className="inline-flex items-center gap-1.5 rounded-xl bg-sky-600 px-3.5 py-2 text-xs font-black text-white shadow-sm transition hover:bg-sky-500 cursor-pointer"
+                    >
+                      {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 fill-white" />}
+                      {isPlaying ? "Pause" : routeStep >= directions.length - 1 ? "Replay" : "Play"}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={resetRoute}
+                      className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white p-2 text-slate-500 hover:text-slate-800 cursor-pointer"
+                      title="Reset route"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={nextStep}
+                      disabled={routeStep >= directions.length - 1}
+                      className="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 disabled:opacity-40 disabled:hover:bg-white cursor-pointer disabled:cursor-not-allowed"
+                    >
+                      Next
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Map Canvas */}
           <div className="relative min-h-[500px] overflow-hidden bg-[#dce8e5] p-5 sm:min-h-[580px] sm:p-8">
             {/* Background green park shapes */}
             <div className="absolute inset-0 opacity-80" aria-hidden="true">
@@ -405,12 +472,6 @@ export function PrototypeMaps({ mode = "caregiver" }: { mode?: "caregiver" | "pa
               <span className="absolute left-[8%] top-[43%] rounded-md bg-[#e7f2e5]/90 px-2 py-1 text-emerald-800 shadow-sm">Maple Garden</span>
             </div>
 
-            {/* Front Gate Landmark */}
-            <div className="absolute left-[32%] top-[48%] z-10 -translate-x-1/2 -translate-y-1/2 flex items-center gap-1 rounded-lg border border-white/90 bg-white/95 px-2 py-1 text-[10px] font-black uppercase tracking-wider text-slate-700 shadow-sm">
-              <DoorOpen className="h-3.5 w-3.5 text-sky-600" />
-              Front Gate
-            </div>
-
             {/* Patient Marker */}
             <div
               className="absolute z-20 -translate-x-1/2 -translate-y-1/2 transition-all duration-1000 ease-in-out"
@@ -434,69 +495,6 @@ export function PrototypeMaps({ mode = "caregiver" }: { mode?: "caregiver" | "pa
             >
               {routeStep >= directions.length - 1 && routeStarted ? "Arrived" : liveLocationEnabled ? "Patient live" : "Location paused"}
             </span>
-
-            {/* Direction Instruction Banner (Top overlay when route active) */}
-            {routeStarted && (
-              <div className="absolute left-1/2 top-4 z-30 flex w-[calc(100%-2rem)] -translate-x-1/2 flex-col gap-3 rounded-2xl border border-sky-200 bg-white/95 p-4 shadow-xl backdrop-blur-sm sm:w-auto sm:min-w-[420px]">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-sky-500 text-white shadow-sm">
-                      <Navigation className="h-4 w-4 rotate-45 fill-white" />
-                    </span>
-                    <span className="text-xs font-black uppercase tracking-wider text-sky-700">
-                      Step {routeStep + 1} of {directions.length}
-                    </span>
-                  </div>
-                  <SpeakButton text={currentDirection} autoPlay={isPlaying} />
-                </div>
-
-                <p className="text-base font-black leading-snug text-slate-800">
-                  {currentDirection}
-                </p>
-
-                {/* Step Controls */}
-                <div className="flex items-center justify-between border-t border-slate-100 pt-3">
-                  <button
-                    type="button"
-                    onClick={prevStep}
-                    disabled={routeStep === 0}
-                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 disabled:opacity-40 disabled:hover:bg-white cursor-pointer disabled:cursor-not-allowed"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                    Prev
-                  </button>
-
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={togglePlay}
-                      className="inline-flex items-center gap-1.5 rounded-xl bg-sky-600 px-3.5 py-1.5 text-xs font-black text-white shadow-sm transition hover:bg-sky-500 cursor-pointer"
-                    >
-                      {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 fill-white" />}
-                      {isPlaying ? "Pause" : routeStep >= directions.length - 1 ? "Replay" : "Play"}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={resetRoute}
-                      className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white p-1.5 text-slate-500 hover:text-slate-800 cursor-pointer"
-                      title="Reset route"
-                    >
-                      <RotateCcw className="h-4 w-4" />
-                    </button>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={nextStep}
-                    disabled={routeStep >= directions.length - 1}
-                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 disabled:opacity-40 disabled:hover:bg-white cursor-pointer disabled:cursor-not-allowed"
-                  >
-                    Next
-                    <ChevronRight className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
-            )}
 
             {/* Saved Location Pins */}
             {locations.map((location) => {
