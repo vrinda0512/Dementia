@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { patientService, familyService } from "@/lib/supabase/services";
 import { useActivePatientId, useAppStore } from "@/lib/stores/app-store";
@@ -11,12 +12,16 @@ export function usePatient() {
   const query = useQuery<Patient | null>({
     queryKey: ["patient", patientId],
     queryFn: async () => {
-      const p = await patientService.getPatient(patientId);
-      if (p) setPatient(p);
-      return p;
+      return await patientService.getPatient(patientId);
     },
     enabled: Boolean(patientId),
   });
+
+  useEffect(() => {
+    if (query.data) {
+      setPatient(query.data);
+    }
+  }, [query.data, setPatient]);
 
   const updatePatient = useMutation({
     mutationFn: async (updates: Partial<Patient>) => {
@@ -24,10 +29,22 @@ export function usePatient() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["patient", patientId] });
+      queryClient.invalidateQueries({ queryKey: ["caregiver-patients"] });
     },
   });
 
-  return { ...query, updatePatient };
+  const createPatient = useMutation({
+    mutationFn: async (newPatient: Omit<Patient, "id">) => {
+      return await patientService.createPatient(newPatient);
+    },
+    onSuccess: (created) => {
+      queryClient.invalidateQueries({ queryKey: ["patient"] });
+      queryClient.invalidateQueries({ queryKey: ["caregiver-patients"] });
+      if (created) setPatient(created);
+    },
+  });
+
+  return { ...query, updatePatient, createPatient };
 }
 
 export function useCaregiverPatients(caregiverId?: string) {
@@ -35,23 +52,29 @@ export function useCaregiverPatients(caregiverId?: string) {
   const setPatient = useAppStore((s) => s.setPatient);
   const current = useAppStore((s) => s.patient);
 
-  return useQuery<Patient[]>({
+  const query = useQuery<Patient[]>({
     queryKey: ["caregiver-patients", caregiverId],
     queryFn: async () => {
       if (!caregiverId) return [];
       const list = await patientService.getPatientsForCaregiver(caregiverId);
       // If none linked to caregiver, show all patients so dropdown still works
-      const patients =
-        list.length > 0 ? list : await patientService.getAllPatients();
+      return list.length > 0 ? list : await patientService.getAllPatients();
+    },
+    enabled: Boolean(caregiverId),
+  });
+
+  useEffect(() => {
+    if (query.data) {
+      const patients = query.data;
       setPatients(patients);
       if (patients.length > 0) {
         const stillValid = current && patients.some((p) => p.id === current.id);
         if (!stillValid) setPatient(patients[0]);
       }
-      return patients;
-    },
-    enabled: Boolean(caregiverId),
-  });
+    }
+  }, [query.data, setPatients, setPatient, current]);
+
+  return query;
 }
 
 export function useFamilyMembers() {

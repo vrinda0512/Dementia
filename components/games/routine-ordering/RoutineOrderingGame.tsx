@@ -523,7 +523,7 @@ export default function RoutineOrderingGame({
             <div className="grid min-h-[620px] md:grid-cols-2">
               <div className="flex flex-col justify-center p-8 md:p-12">
                 <div className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-orange-500">
-                  MEMORA · MEMORY JOURNEY
+                  SMARIKA · MEMORY JOURNEY
                 </div>
 
                 <h1 className="text-4xl font-black leading-tight text-slate-900 md:text-5xl">
@@ -950,7 +950,7 @@ function TopBar({
     <header className="flex items-center justify-between gap-3">
       <div>
         <div className="text-[10px] font-black uppercase tracking-[0.25em] text-orange-500">
-          MEMORA · MEMORY JOURNEY
+          SMARIKA · MEMORY JOURNEY
         </div>
 
         <h1 className="mt-1 text-2xl font-black text-slate-900">

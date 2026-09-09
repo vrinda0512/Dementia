@@ -9,7 +9,7 @@ export interface SyncQueueItem {
   createdAt: string;
 }
 
-export class MemoraOfflineDB extends Dexie {
+export class SmarikaOfflineDB extends Dexie {
   patients!: Table<Patient>;
   gameSessions!: Table<GameSession>;
   gameEvents!: Table<GameEvent>;
@@ -18,7 +18,7 @@ export class MemoraOfflineDB extends Dexie {
   syncQueue!: Table<SyncQueueItem>;
 
   constructor() {
-    super("MemoraOfflineDB");
+    super("SmarikaOfflineDB");
     this.version(1).stores({
       patients: "id",
       gameSessions: "id, patientId, gameId, completed",
@@ -30,4 +30,4 @@ export class MemoraOfflineDB extends Dexie {
   }
 }
 
-export const offlineDB = new MemoraOfflineDB();
+export const offlineDB = new SmarikaOfflineDB();

@@ -28,7 +28,7 @@ const demoContext: TherapeuticGameContext = {
 
 export default function PatientTherapeuticTeaRoomPage() {
   const handleSessionEvent = (event: TherapeuticSessionEvent) => {
-    console.info("MEMORA THERAPEUTIC SESSION:", event);
+    console.info("SMARIKA THERAPEUTIC SESSION:", event);
   };
 
   return <TherapeuticTeaRoomGame context={demoContext} onSessionEvent={handleSessionEvent} />;

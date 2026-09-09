@@ -1,4 +1,4 @@
--- Memora / Dementia care schema helpers + seed
+-- Smarika / Dementia care schema helpers + seed
 -- Run in Supabase SQL Editor. Adjust if columns already exist.
 -- Project tables expected: patients, caregivers (optional), family_members,
 -- routines, personalization_questions, reminders, cognitive_metrics,
@@ -49,7 +49,7 @@ insert into public.caregivers (id, name, email, role)
 values (
   'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
   'Dr. Ananya Sharma',
-  'ananya@memora.care',
+  'ananya@smarika.care',
   'caregiver'
 )
 on conflict (id) do update set name = excluded.name, email = excluded.email;

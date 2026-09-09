@@ -21,10 +21,12 @@ import {
   Sparkles,
   Image as ImageIcon,
   Volume2,
+  Edit3,
+  Phone,
 } from "lucide-react";
 
 export default function CaregiverPatientPage() {
-  const { data: patient } = usePatient();
+  const { data: patient, updatePatient, createPatient } = usePatient();
   const { data: family, addMember, deleteMember } = useFamilyMembers();
   const { data: routines, addRoutine, deleteRoutine } = useRoutines();
   const { data: questions, addQuestion, deleteQuestion } = useQuestions();
@@ -35,6 +37,60 @@ export default function CaregiverPatientPage() {
   const [isFamilyModalOpen, setIsFamilyModalOpen] = useState(false);
   const [isRoutineModalOpen, setIsRoutineModalOpen] = useState(false);
   const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
+  const [isPatientModalOpen, setIsPatientModalOpen] = useState(false);
+  const [isCreatePatientModalOpen, setIsCreatePatientModalOpen] = useState(false);
+
+  // Form states - Patient Edit / Create
+  const [pName, setPName] = useState("");
+  const [pAge, setPAge] = useState(72);
+  const [pLang, setPLang] = useState("English");
+  const [pLoc, setPLoc] = useState("New Delhi");
+  const [pPhone, setPPhone] = useState("+919876543210");
+
+  const openEditPatientModal = () => {
+    if (patient) {
+      setPName(patient.name || "");
+      setPAge(patient.age || 72);
+      setPLang(patient.preferredLanguage || "English");
+      setPLoc(patient.location || "New Delhi");
+      setPPhone(patient.phone || "+919876543210");
+    }
+    setIsPatientModalOpen(true);
+  };
+
+  const openCreatePatientModal = () => {
+    setPName("");
+    setPAge(70);
+    setPLang("English");
+    setPLoc("New Delhi");
+    setPPhone("+919876543210");
+    setIsCreatePatientModalOpen(true);
+  };
+
+  const handleUpdatePatient = (e: React.FormEvent) => {
+    e.preventDefault();
+    updatePatient.mutate({
+      name: pName,
+      age: Number(pAge),
+      preferredLanguage: pLang,
+      location: pLoc,
+      phone: pPhone,
+    });
+    setIsPatientModalOpen(false);
+  };
+
+  const handleCreatePatient = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!pName) return;
+    createPatient.mutate({
+      name: pName,
+      age: Number(pAge),
+      preferredLanguage: pLang,
+      location: pLoc,
+      phone: pPhone,
+    });
+    setIsCreatePatientModalOpen(false);
+  };
 
   // Form states - Family Member
   const [familyName, setFamilyName] = useState("");
@@ -108,7 +164,6 @@ export default function CaregiverPatientPage() {
       .map((opt) => opt.trim())
       .filter((opt) => opt.length > 0);
 
-    // Make sure correct answer is in options if multiple-choice
     if (qFormat === "multiple-choice" && !optionsArray.includes(qAnswer)) {
       optionsArray.unshift(qAnswer);
     }
@@ -152,14 +207,30 @@ export default function CaregiverPatientPage() {
             <p className="text-sm font-semibold text-slate-500 mt-1">
               Age {patient?.age || 72} • Language: {patient?.preferredLanguage || "English"} • {patient?.location || "New Delhi"}
             </p>
+            <div className="flex items-center gap-2 mt-2">
+              <span className="inline-flex items-center gap-1.5 text-xs font-extrabold text-sky-700 bg-sky-50 px-3 py-1 rounded-xl border border-sky-200">
+                <Phone className="w-3.5 h-3.5 text-sky-600" />
+                <span>WhatsApp: {patient?.phone || "Not set (+91...)"}</span>
+              </span>
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="bg-slate-50 px-4 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>Role: Caregiver (Admin)</span>
-          </div>
+        <div className="flex items-center gap-3 flex-wrap">
+          <button
+            onClick={openEditPatientModal}
+            className="inline-flex items-center gap-2 px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl border border-slate-200 transition-all cursor-pointer"
+          >
+            <Edit3 className="w-4 h-4 text-slate-600" />
+            <span>Edit Patient</span>
+          </button>
+          <button
+            onClick={openCreatePatientModal}
+            className="inline-flex items-center gap-2 px-3.5 py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Create Patient</span>
+          </button>
         </div>
       </div>
 
@@ -747,6 +818,196 @@ export default function CaregiverPatientPage() {
                   className="px-5 py-2 bg-emerald-600 text-white font-bold text-xs rounded-xl shadow-md hover:bg-emerald-700"
                 >
                   Save Question
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: EDIT PATIENT (Includes Phone Number) */}
+      {isPatientModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-200 space-y-4">
+            <h3 className="text-xl font-black text-slate-900">Edit Patient Details</h3>
+            <form onSubmit={handleUpdatePatient} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  value={pName}
+                  onChange={(e) => setPName(e.target.value)}
+                  placeholder="e.g. Rahul Sharma"
+                  required
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center justify-between">
+                  <span>WhatsApp Mobile Number</span>
+                  <span className="text-[10px] text-sky-600 font-bold">Format: +919876543210</span>
+                </label>
+                <input
+                  type="tel"
+                  value={pPhone}
+                  onChange={(e) => setPPhone(e.target.value)}
+                  placeholder="+919876543210"
+                  required
+                  className="w-full px-4 py-2.5 bg-sky-50/50 border border-sky-200 rounded-xl text-sm font-bold text-sky-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Age
+                  </label>
+                  <input
+                    type="number"
+                    value={pAge}
+                    onChange={(e) => setPAge(Number(e.target.value))}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Preferred Language
+                  </label>
+                  <input
+                    type="text"
+                    value={pLang}
+                    onChange={(e) => setPLang(e.target.value)}
+                    placeholder="English / Hindi"
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  value={pLoc}
+                  onChange={(e) => setPLoc(e.target.value)}
+                  placeholder="New Delhi"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsPatientModalOpen(false)}
+                  className="px-4 py-2 text-slate-600 font-bold text-xs hover:bg-slate-100 rounded-xl"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-sky-600 text-white font-bold text-xs rounded-xl shadow-md hover:bg-sky-700"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: CREATE PATIENT */}
+      {isCreatePatientModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-200 space-y-4">
+            <h3 className="text-xl font-black text-slate-900">Create New Patient</h3>
+            <form onSubmit={handleCreatePatient} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  Patient Full Name
+                </label>
+                <input
+                  type="text"
+                  value={pName}
+                  onChange={(e) => setPName(e.target.value)}
+                  placeholder="e.g. Rahul Verma"
+                  required
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center justify-between">
+                  <span>WhatsApp Mobile Number</span>
+                  <span className="text-[10px] text-sky-600 font-bold">Format: +919876543210</span>
+                </label>
+                <input
+                  type="tel"
+                  value={pPhone}
+                  onChange={(e) => setPPhone(e.target.value)}
+                  placeholder="+919876543210"
+                  required
+                  className="w-full px-4 py-2.5 bg-sky-50/50 border border-sky-200 rounded-xl text-sm font-bold text-sky-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Age
+                  </label>
+                  <input
+                    type="number"
+                    value={pAge}
+                    onChange={(e) => setPAge(Number(e.target.value))}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Language
+                  </label>
+                  <input
+                    type="text"
+                    value={pLang}
+                    onChange={(e) => setPLang(e.target.value)}
+                    placeholder="English"
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  value={pLoc}
+                  onChange={(e) => setPLoc(e.target.value)}
+                  placeholder="New Delhi"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsCreatePatientModalOpen(false)}
+                  className="px-4 py-2 text-slate-600 font-bold text-xs hover:bg-slate-100 rounded-xl"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-sky-600 text-white font-bold text-xs rounded-xl shadow-md hover:bg-sky-700"
+                >
+                  Create Patient
                 </button>
               </div>
             </form>

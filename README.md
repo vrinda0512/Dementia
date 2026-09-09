@@ -1,4 +1,4 @@
-# Memora — Dementia care companion
+# Smarika — Dementia care companion
 
 ## Supabase setup
 

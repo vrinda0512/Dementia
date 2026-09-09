@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Memora — AI Cognitive Care Platform",
+  title: "Smarika — AI Cognitive Care Platform",
   description: "AI-powered cognitive memory & routine companion for dementia patients and caregivers.",
 };
 

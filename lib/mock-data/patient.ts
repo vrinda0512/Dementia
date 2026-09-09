@@ -3,7 +3,7 @@ import type { Patient, Caregiver } from "@/lib/types";
 export const demoCaregiver: Caregiver = {
   id: "caregiver-001",
   name: "Dr. Ananya Sharma",
-  email: "ananya@memora.care",
+  email: "ananya@smarika.care",
 };
 
 export const demoPatient: Patient = {

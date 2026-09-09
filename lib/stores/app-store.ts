@@ -60,7 +60,7 @@ export const useAppStore = create<AppState>()(
         }),
     }),
     {
-      name: "memora-app-storage",
+      name: "smarika-app-storage",
       partialize: (state) => ({
         role: state.role,
         caregiver: state.caregiver,

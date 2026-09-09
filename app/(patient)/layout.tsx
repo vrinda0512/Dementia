@@ -71,7 +71,7 @@ export default function PatientLayout({ children }: { children: ReactNode }) {
       </main>
 
       <footer className="py-4 text-center text-xs font-semibold text-slate-400">
-        Memora • Friendly Companion Mode
+        Smarika • Friendly Companion Mode
       </footer>
     </div>
   );
