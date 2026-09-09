@@ -6,6 +6,7 @@ import { AudioManager } from "./AudioManager";
 import GameWorld from "./GameWorld";
 import styles from "./TherapeuticTeaRoom.module.css";
 import { InteractionResponse, TherapeuticGameContext, TherapeuticSessionEvent } from "./types";
+import { VoiceButton } from "@/features/shared/components/voice-button";
 
 type TherapeuticTeaRoomGameProps = {
   context: TherapeuticGameContext;
@@ -130,6 +131,12 @@ export default function TherapeuticTeaRoomGame({ context, onSessionEvent }: Ther
           <span>Quiet Tea Room</span>
         </div>
         <div className={styles.controls}>
+          <VoiceButton
+            textToSpeak={sessionActive ? message : "Take your time. Enter the room, look around slowly, and tap anything that catches your eye."}
+            iconOnly
+            size="sm"
+            className={styles.iconButton}
+          />
           <button
             className={styles.iconButton}
             type="button"
@@ -153,9 +160,15 @@ export default function TherapeuticTeaRoomGame({ context, onSessionEvent }: Ther
             <span className={styles.eyebrow}>A familiar morning room</span>
             <h1>Settle in for a quiet moment.</h1>
             <p>Look around slowly. Familiar objects in the room respond with small, gentle moments.</p>
-            <button className={styles.beginButton} type="button" onClick={beginVisit}>
-              <Leaf size={18} /> Enter the room
-            </button>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button className={styles.beginButton} type="button" onClick={beginVisit}>
+                <Leaf size={18} /> Enter the room
+              </button>
+              <VoiceButton
+                textToSpeak="Take your time. Enter the room, look around slowly, and tap anything that catches your eye."
+                size="sm"
+              />
+            </div>
           </div>
         </section>
       )}
@@ -163,6 +176,7 @@ export default function TherapeuticTeaRoomGame({ context, onSessionEvent }: Ther
       {sessionActive && (
         <div className={styles.guidance} aria-live="polite">
           {hoverLabel ? <span className={styles.hoverHint}>{hoverLabel}</span> : <span>{message}</span>}
+          {!hoverLabel && <VoiceButton textToSpeak={message} size="sm" iconOnly />}
         </div>
       )}
 

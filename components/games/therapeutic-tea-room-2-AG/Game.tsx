@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Bookmark, ChevronLeft, ChevronRight, Glasses, KeyRound, Leaf, Mail, Music2, Search, Smartphone, Volume2, VolumeX, X } from "lucide-react";
 import { AudioManager } from "./AudioManager";
+import { VoiceButton } from "@/features/shared/components/voice-button";
 import { createMemoryRound, HIDING_PLACES, MEMORY_ITEMS } from "./content/memoryRound";
 import GameWorld from "./GameWorld";
 import styles from "./TherapeuticTeaRoom.module.css";
@@ -45,6 +46,7 @@ function MemoryPrompt({ itemId, title, detail }: { itemId: MemoryItemId; title: 
         <span className={styles.eyebrow}>A familiar object</span>
         <h2>{title}</h2>
         <p>{detail}</p>
+        <div className="mt-4"><VoiceButton textToSpeak={`${title}. ${detail}`} size="sm" /></div>
       </div>
     </aside>
   );
@@ -309,6 +311,12 @@ export default function TherapeuticTeaRoomGame({ context, onSessionEvent }: Ther
           <span>Quiet Tea Room</span>
         </div>
         <div className={styles.controls}>
+          <VoiceButton
+            textToSpeak={message}
+            iconOnly
+            size="sm"
+            className={styles.iconButton}
+          />
           <button className={styles.iconButton} type="button" onClick={toggleSound} aria-label={soundEnabled ? "Turn sound off" : "Turn sound on"} title={soundEnabled ? "Turn sound off" : "Turn sound on"}>
             {soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
           </button>
@@ -322,6 +330,7 @@ export default function TherapeuticTeaRoomGame({ context, onSessionEvent }: Ther
             <span className={styles.eyebrow}>A familiar morning room</span>
             <h1>Choose a quiet visit.</h1>
             <p>There is no rush. Begin with a familiar memory activity or simply settle into the room's gentle sounds.</p>
+            <div className="mt-4"><VoiceButton textToSpeak="There is no rush. Choose a familiar memory activity, or settle into the room's gentle sounds." size="sm" /></div>
             <div className={styles.modeOptions}>
               <button className={styles.beginButton} type="button" onClick={beginFindMode}><Search size={18} /> Find the objects</button>
               <button className={styles.asmrButton} type="button" onClick={beginRelaxingAsmr}><Music2 size={18} /> Relaxing ASMR</button>
@@ -336,6 +345,7 @@ export default function TherapeuticTeaRoomGame({ context, onSessionEvent }: Ther
         <aside className={styles.smallPrompt} aria-live="polite">
           <span className={styles.eyebrow}>A quiet place</span>
           <h2>The {observationItem.label.toLowerCase()} {settledVerb(observationItem.id)} settled.</h2>
+          <div className="mt-4"><VoiceButton textToSpeak={message} size="sm" /></div>
           <button className={styles.nextButton} type="button" onClick={continueObservation}>{observationIndex + 1 === round.length ? "Bring the places to mind" : "Show the next object"}</button>
         </aside>
       )}
@@ -347,6 +357,7 @@ export default function TherapeuticTeaRoomGame({ context, onSessionEvent }: Ther
           <span className={styles.eyebrow}>{feedback.correct ? "A clear memory" : "Let’s look together"}</span>
           <h2>{feedback.correct ? "That feels right." : "There it is."}</h2>
           <p>The {MEMORY_ITEMS[feedback.itemId].label.toLowerCase()} rested by the {revealedPlace.label.toLowerCase()}.</p>
+          <div className="mt-4"><VoiceButton textToSpeak={message} size="sm" /></div>
           <button className={styles.nextButton} type="button" onClick={continueRecall}>{recallIndex + 1 === round.length ? "Finish this visit" : "Remember the next one"}</button>
         </aside>
       )}
@@ -356,11 +367,12 @@ export default function TherapeuticTeaRoomGame({ context, onSessionEvent }: Ther
           <span className={styles.eyebrow}>A quiet visit</span>
           <h2>You took time to notice.</h2>
           <p>The room is still here for a gentle look around.</p>
+          <div className="mt-4"><VoiceButton textToSpeak={message} size="sm" /></div>
           <button className={styles.nextButton} type="button" onClick={beginExploring}>Explore the room</button>
         </aside>
       )}
 
-      {sessionActive && phase === "explore" && <div className={styles.guidance} aria-live="polite">{hoverLabel ? <span className={styles.hoverHint}>{hoverLabel}</span> : <span>{message}</span>}</div>}
+      {sessionActive && phase === "explore" && <div className={styles.guidance} aria-live="polite">{hoverLabel ? <span className={styles.hoverHint}>{hoverLabel}</span> : <span>{message}</span>} {!hoverLabel && <VoiceButton textToSpeak={message} iconOnly size="sm" />}</div>}
 
       {sessionActive && (
         <nav className={styles.cameraControls} aria-label="Camera navigation">

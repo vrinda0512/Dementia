@@ -13,6 +13,7 @@ import {
   HeartPulse,
   Smartphone,
   X,
+  MapPinned,
 } from "lucide-react";
 import { useAppStore } from "@/lib/stores/app-store";
 
@@ -20,6 +21,7 @@ const navGroups = [
   {
     items: [
       { name: "Overview", href: "/caregiver/dashboard", icon: LayoutDashboard },
+        { name: "Maps", href: "/caregiver/maps", icon: MapPinned },
     ],
   },
   {

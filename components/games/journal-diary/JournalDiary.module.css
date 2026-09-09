@@ -474,6 +474,13 @@
 
 .voiceButton:hover { background: #fff4d8; transform: translateY(-1px); }
 .voiceButton:active { transform: scale(0.93); }
+.voiceButton:disabled { cursor: wait; opacity: 0.72; }
+.voiceButton[data-status="recording"] { color: #fff4e4; background: #aa4b3a; animation: voicePulse 1.5s ease-in-out infinite; }
+.voiceButton[data-status="processing"] { color: #825340; background: #f7e2b8; }
+.voiceButton[data-status="success"] { color: #2e7049; background: #dcefd8; }
+.voiceButton[data-status="error"] { color: #9e4438; background: #f8ded4; }
+
+.voiceSpinner { animation: voiceSpin 900ms linear infinite; }
 
 .voiceHint {
   position: absolute;
@@ -586,6 +593,14 @@
 
 .journal[data-stage="closing"] .writingPage { opacity: 0; }
 .journal[data-stage="closing"] .turningPage { opacity: 0.48; transform: rotateY(0deg) translateZ(12px); transition: opacity 180ms ease, transform 520ms ease; }
+
+@keyframes voicePulse {
+  50% { transform: scale(1.06); }
+}
+
+@keyframes voiceSpin {
+  to { transform: rotate(360deg); }
+}
 
 @keyframes pageTurn {
   0% { transform: rotateY(0deg) translateZ(12px); }

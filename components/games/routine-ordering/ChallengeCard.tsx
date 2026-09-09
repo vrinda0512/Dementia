@@ -5,6 +5,7 @@ import {
   ChallengeOption,
 } from "./types";
 import RoutineIcon from "./RoutineIcon";
+import { VoiceButton } from "@/features/shared/components/voice-button";
 
 type ChallengeCardProps = {
   challenge: Challenge;
@@ -20,6 +21,8 @@ type ChallengeCardProps = {
   disabled?: boolean;
 
   hintUsed?: boolean;
+
+  voiceText: string;
 };
 
 export default function ChallengeCard({
@@ -30,6 +33,7 @@ export default function ChallengeCard({
   onHint,
   disabled = false,
   hintUsed = false,
+  voiceText,
 }: ChallengeCardProps) {
 
   const isRebuild =
@@ -58,14 +62,17 @@ export default function ChallengeCard({
 
         </div>
 
-        <button
-          type="button"
-          onClick={onHint}
-          disabled={disabled || hintUsed}
-          className="rounded-2xl bg-amber-50 px-5 py-3 font-black text-amber-700 transition hover:bg-amber-100 disabled:opacity-40"
-        >
-          💡 {hintUsed ? "Hint Used" : "Hint"}
-        </button>
+        <div className="flex items-center gap-2 self-start">
+          <VoiceButton textToSpeak={voiceText} size="sm" iconOnly />
+          <button
+            type="button"
+            onClick={onHint}
+            disabled={disabled || hintUsed}
+            className="rounded-2xl bg-amber-50 px-5 py-3 font-black text-amber-700 transition hover:bg-amber-100 disabled:opacity-40"
+          >
+            💡 {hintUsed ? "Hint Used" : "Hint"}
+          </button>
+        </div>
 
       </div>
 

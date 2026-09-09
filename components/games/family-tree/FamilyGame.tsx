@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { loadFamilyForGame } from "./familyData";
+import { loadFamilyForGame, mapMembersToTreeMembers } from "./familyData";
 import { FamilyMember } from "./types";
 import FamilyTree from "./FamilyTree";
 import FamilyPostcard from "./FamilyPostcard";
 import { useActivePatientId } from "@/lib/stores/app-store";
+import { VoiceButton } from "@/features/shared/components/voice-button";
 
 export default function FamilyGame() {
   const patientId = useActivePatientId();
@@ -106,6 +107,7 @@ export default function FamilyGame() {
   };
 
   const isComplete = members.length > 0 && matchedMembers.length === members.length;
+  const treeMembers = mapMembersToTreeMembers(members);
 
   const handleRestart = () => {
     setSelectedMember(null);
@@ -161,6 +163,9 @@ export default function FamilyGame() {
             <p className="mt-1 text-sm text-[#71806e]" aria-live="polite">
               {feedback}
             </p>
+            <div className="mt-3">
+              <VoiceButton textToSpeak={feedback} size="sm" />
+            </div>
           </div>
           <div className="rounded-2xl border border-white/80 bg-white/75 px-5 py-4 shadow-sm backdrop-blur-sm">
             <p className="text-sm font-bold text-[#71806e]">Family remembered</p>
@@ -175,7 +180,7 @@ export default function FamilyGame() {
           className="rounded-[2.25rem] border border-white/80 bg-white/45 p-2 shadow-[0_20px_60px_rgba(73,92,62,0.14)] backdrop-blur-sm sm:p-4"
         >
           <FamilyTree
-            members={members}
+            members={treeMembers}
             matchedMemberIds={matchedMembers}
             selectedMemberId={selectedSource === "tree" ? selectedMember?.id ?? null : null}
             incorrectMemberId={incorrectTreeMemberId}

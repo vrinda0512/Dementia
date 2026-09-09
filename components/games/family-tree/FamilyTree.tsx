@@ -37,7 +37,7 @@ export default function FamilyTree({
               type="button"
               aria-label={`${member.name}, ${member.relationship}`}
               aria-pressed={isMatched || isSelected}
-              className={`group absolute z-10 flex h-[clamp(4.75rem,13vw,6rem)] w-[clamp(4.75rem,13vw,6rem)] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-2xl border-4 p-1 transition duration-300 focus:outline-none focus:ring-4 focus:ring-[#f4c979] ${
+              className={`group absolute z-10 flex h-[clamp(4.25rem,11vw,5.5rem)] w-[clamp(4.25rem,11vw,5.5rem)] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-2xl border-4 p-1 transition duration-300 focus:outline-none focus:ring-4 focus:ring-[#f4c979] ${
                 isMatched
                   ? "border-[#78b477] bg-[#e7f5e3] shadow-[0_0_0_6px_rgba(120,180,119,0.28),0_8px_20px_rgba(53,80,49,0.22)]"
                   : isIncorrect
@@ -56,7 +56,7 @@ export default function FamilyTree({
               <img
                 src={member.photo}
                 alt={member.name}
-                className="h-[clamp(2.5rem,8vw,3.5rem)] w-[clamp(2.5rem,8vw,3.5rem)] rounded-xl object-cover"
+                className="h-[clamp(2.25rem,7vw,3.15rem)] w-[clamp(2.25rem,7vw,3.15rem)] rounded-xl object-cover"
               />
 
               <span className="max-w-full truncate px-1 text-[11px] font-extrabold text-[#2d4b3c] sm:text-xs">

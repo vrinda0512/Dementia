@@ -313,33 +313,33 @@ export const patientService = {
 
 export const caregiverService = {
   /** Optional caregivers table — falls back to derived profile from patients. */
-  async getCaregiver(caregiverId: string): Promise<Caregiver | null> {
-    const supabase = getSupabase();
-    if (!supabase) return null;
+  // async getCaregiver(caregiverId: string): Promise<Caregiver | null> {
+  //   const supabase = getSupabase();
+  //   if (!supabase) return null;
 
-    const { data, error } = await supabase
-      .from("caregivers")
-      .select("*")
-      .eq("id", caregiverId)
-      .maybeSingle();
+  //   const { data, error } = await supabase
+  //     .from("caregivers")
+  //     .select("*")
+  //     .eq("id", caregiverId)
+  //     .maybeSingle();
 
-    if (!error && data) {
-      return {
-        id: data.id,
-        name: data.name,
-        email: data.email,
-        role: data.role || "caregiver",
-      };
-    }
+  //   if (!error && data) {
+  //     return {
+  //       id: data.id,
+  //       name: data.name,
+  //       email: data.email,
+  //       role: data.role || "caregiver",
+  //     };
+  //   }
 
-    // Fallback: no caregivers table — invent a display profile for the id
-    return {
-      id: caregiverId,
-      name: "Caregiver",
-      email: "caregiver@smarika.care",
-      role: "caregiver",
-    };
-  },
+  //   // Fallback: no caregivers table — invent a display profile for the id
+  //   return {
+  //     id: caregiverId,
+  //     name: "Caregiver",
+  //     email: "caregiver@memora.care",
+  //     role: "caregiver",
+  //   };
+  // },
 
   async findCaregiverByEmail(email: string): Promise<Caregiver | null> {
     const supabase = getSupabase();
@@ -514,6 +514,7 @@ export const questionService = {
         answer: question.answer,
         options: question.options || [],
         format: question.format,
+        image: question.image || null,
       })
       .select()
       .single();
@@ -751,7 +752,12 @@ export const memoryService = {
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("getMemories:", error);
+      console.error("getMemories:", {
+        code: error.code,
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+      });
       return [];
     }
     return (data || []).map(mapMemory);
