@@ -8,6 +8,7 @@ import RoutineWorld from "./RoutineWorld";
 import RoutineIcon from "./RoutineIcon";
 import { generateChallenges } from "./challengeEngine";
 import { ChallengeOption, ChallengeResult, RoutineGameResult, RoutineStep } from "./types";
+import { VoiceButton } from "@/features/shared/components/voice-button";
 import "./memoryBook.css";
 
 type Props = {
@@ -539,6 +540,11 @@ export default function RoutineOrderingGame({
                   companion remember them too.
                 </p>
 
+                <VoiceButton
+                  textToSpeak="Let us take a gentle journey through your morning. Watch the familiar moments, then choose what you remember."
+                  className="mt-5 self-start"
+                />
+
                 <div className="mt-8 grid grid-cols-2 gap-3">
                   <MiniFeature
                     icon="👀"
@@ -678,6 +684,13 @@ export default function RoutineOrderingGame({
               <div className="mt-3 inline-flex rounded-full bg-slate-100 px-4 py-2 text-sm font-bold text-slate-600">
                 📍 {currentPreviewStep.location}
               </div>
+
+              <div className="mt-4">
+                <VoiceButton
+                  textToSpeak={`${currentPreviewStep.label}. ${currentPreviewStep.description} It happens at ${currentPreviewStep.location}.`}
+                  size="sm"
+                />
+              </div>
             </div>
           )}
 
@@ -737,6 +750,10 @@ export default function RoutineOrderingGame({
                 Every remembered moment helps strengthen
                 your personal memory journey.
               </p>
+
+              <div className="mt-5">
+                <VoiceButton textToSpeak={rewardMessage} size="sm" />
+              </div>
 
               <div className="mt-6 flex items-center justify-center gap-2">
                 {Array.from(
@@ -909,6 +926,7 @@ export default function RoutineOrderingGame({
             onHint={handleHint}
             disabled={false}
             hintUsed={hintUsed}
+            voiceText={feedbackMessage || `${currentChallenge.prompt}. ${currentChallenge.subtitle}`}
           />
 
           {feedbackMessage && (

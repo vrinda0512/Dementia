@@ -2,6 +2,11 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Patient, Caregiver } from "@/lib/types";
 import { DEFAULT_CAREGIVER_ID, DEFAULT_PATIENT_ID } from "@/lib/supabase/config";
+import {
+  DEFAULT_PATIENT_LANGUAGE,
+  normalizePatientLanguage,
+  type PatientLanguageCode,
+} from "@/lib/voice/languages";
 
 export type AppRole = "caregiver" | "patient" | null;
 
@@ -13,7 +18,7 @@ interface AppState {
   patients: Patient[];
   isSidebarOpen: boolean;
   isPatientMode: boolean;
-  activeLanguage: string;
+  activeLanguage: PatientLanguageCode;
   setRole: (role: AppRole) => void;
   setCaregiver: (caregiver: Caregiver | null) => void;
   setPatient: (patient: Patient | null) => void;
@@ -23,7 +28,7 @@ interface AppState {
   setSidebarOpen: (open: boolean) => void;
   enterPatientMode: () => void;
   exitPatientMode: () => void;
-  setLanguage: (lang: string) => void;
+  setLanguage: (lang: PatientLanguageCode | string) => void;
   logout: () => void;
 }
 
@@ -36,7 +41,7 @@ export const useAppStore = create<AppState>()(
       patients: [],
       isSidebarOpen: false,
       isPatientMode: false,
-      activeLanguage: "English",
+      activeLanguage: DEFAULT_PATIENT_LANGUAGE,
       setRole: (role) => set({ role }),
       setCaregiver: (caregiver) => set({ caregiver }),
       setPatient: (patient) => set({ patient }),
@@ -49,7 +54,7 @@ export const useAppStore = create<AppState>()(
       setSidebarOpen: (open) => set({ isSidebarOpen: open }),
       enterPatientMode: () => set({ isPatientMode: true }),
       exitPatientMode: () => set({ isPatientMode: false }),
-      setLanguage: (lang) => set({ activeLanguage: lang }),
+      setLanguage: (lang) => set({ activeLanguage: normalizePatientLanguage(lang) }),
       logout: () =>
         set({
           role: null,
@@ -61,6 +66,21 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: "memora-app-storage",
+      version: 1,
+      migrate: (persistedState) => {
+        const state = persistedState as Partial<Pick<
+          AppState,
+          "role" | "caregiver" | "patient" | "patients" | "isPatientMode" | "activeLanguage"
+        >>;
+        return {
+          role: state.role ?? null,
+          caregiver: state.caregiver ?? null,
+          patient: state.patient ?? null,
+          patients: state.patients ?? [],
+          isPatientMode: state.isPatientMode ?? false,
+          activeLanguage: normalizePatientLanguage(state.activeLanguage),
+        };
+      },
       partialize: (state) => ({
         role: state.role,
         caregiver: state.caregiver,

@@ -2,3 +2,5 @@ node_modules/
 .next/
 .env.local
 .env.example
+CODEX_PROGRESS.md
+voice_implementation.md

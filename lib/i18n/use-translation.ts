@@ -7,7 +7,7 @@ import { hi } from "./hi";
 export function useTranslation() {
   const activeLanguage = useAppStore((state) => state.activeLanguage);
 
-  const dict = activeLanguage === "Hindi" ? hi : en;
+  const dict = activeLanguage === "hi-IN" ? hi : en;
 
   return {
     t: (key: keyof typeof en) => dict[key] || en[key] || key,

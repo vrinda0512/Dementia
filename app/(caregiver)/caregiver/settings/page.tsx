@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Settings as SettingsIcon, Smartphone, Languages, RefreshCw, CheckCircle2, Shield } from "lucide-react";
 import { useAppStore } from "@/lib/stores/app-store";
+import { PATIENT_LANGUAGES } from "@/lib/voice/languages";
 import Link from "next/link";
 
 export default function CaregiverSettingsPage() {
@@ -93,15 +94,18 @@ export default function CaregiverSettingsPage() {
               onChange={(e) => setLanguage(e.target.value)}
               className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-900 text-sm"
             >
-              <option value="Hindi">Hindi (हिंदी)</option>
-              <option value="English">English</option>
+              {PATIENT_LANGUAGES.map((language) => (
+                <option key={language.code} value={language.code}>
+                  {language.label} ({language.nativeLabel})
+                </option>
+              ))}
             </select>
           </div>
 
           <div className="p-4 bg-purple-50 rounded-xl border border-purple-100 flex items-center gap-3">
             <Shield className="w-5 h-5 text-purple-600 shrink-0" />
             <p className="text-xs text-purple-900 font-medium">
-              Web Speech API TTS is enabled for calm, elderly-friendly voice interaction.
+              Sarvam voice services are used for supported patient languages. Assamese remains available for speech-to-text.
             </p>
           </div>
         </div>
