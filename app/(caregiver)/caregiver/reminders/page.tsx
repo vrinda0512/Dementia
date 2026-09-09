@@ -51,7 +51,8 @@ export default function CaregiverRemindersPage() {
             <span>Patient Daily Reminders</span>
           </h1>
           <p className="text-sm font-semibold text-slate-500 mt-1">
-            Configure medication schedules, hydration alerts, and daily routine walk reminders for Meena.
+            Configure medication schedules, hydration alerts, and daily routine reminders for the
+            selected patient.
           </p>
         </div>
 

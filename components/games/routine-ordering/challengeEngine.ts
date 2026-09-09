@@ -23,6 +23,27 @@ export function generateChallenges(
 ): Challenge[] {
   const challenges: Challenge[] = [];
 
+  if (routine.length < 2) {
+    return [
+      {
+        id: "sequence-1",
+        type: "sequence",
+        prompt: "Can you remember the morning in the right order?",
+        subtitle: "Tap the activities in the order they happened.",
+        targetIds: routine.map((step) => step.id),
+        options: shuffle(routine).map(toOption),
+      },
+      {
+        id: "rebuild-1",
+        type: "rebuild",
+        prompt: "One last memory challenge!",
+        subtitle: "Rebuild your entire morning from memory.",
+        targetIds: routine.map((step) => step.id),
+        options: shuffle(routine).map(toOption),
+      },
+    ];
+  }
+
   /*
    * ---------------------------------------------------------
    * 1. SEQUENCE
@@ -115,7 +136,7 @@ export function generateChallenges(
       Math.floor(
         Math.random() * alternatives.length
       )
-    ];
+    ] ?? target;
 
   challenges.push({
     id: "before-1",

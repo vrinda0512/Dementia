@@ -1,4 +1,4 @@
-import { getSupabaseClient } from "../../../lib/supabaseClient";
+import { getSupabaseClient } from "@/lib/supabaseClient";
 import { RoutineGameResult } from "./types";
 
 export async function saveRoutineResult(result: RoutineGameResult) {
@@ -21,7 +21,7 @@ export async function saveRoutineResult(result: RoutineGameResult) {
       hints_used: result.hintsUsed,
       completed: result.completed,
       timestamp: result.timestamp,
-      challenges: JSON.stringify(result.challenges),
+      challenges: result.challenges,
     };
 
     const { data, error } = await supabase.from("routine_results").insert([payload]);

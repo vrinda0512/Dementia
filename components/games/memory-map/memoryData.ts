@@ -1,4 +1,5 @@
 import { MemoryCategoryInfo, MemoryQuestion } from "./types";
+import type { PersonalizationQuestion } from "@/lib/types";
 
 export const memoryCategories: MemoryCategoryInfo[] = [
   {
@@ -67,84 +68,31 @@ export const memoryCategories: MemoryCategoryInfo[] = [
   },
 ];
 
-export const memoryQuestions: MemoryQuestion[] = [
-  {
-    id: "family-1",
-    category: "family",
-    question: "What is your daughter's name?",
-    answer: "Ananya",
-    options: ["Ananya", "Priya", "Meena", "Sunita"],
-    format: "multiple-choice",
-  },
-  {
-    id: "family-2",
-    category: "family",
-    question: "What is your son's name?",
-    answer: "Rahul",
-    options: ["Amit", "Rahul", "Arjun", "Vivek"],
-    format: "multiple-choice",
-  },
+/** Legacy fallback — used only when DB has no personalization_questions. */
+export const memoryQuestions: MemoryQuestion[] = [];
 
-  {
-    id: "childhood-1",
-    category: "childhood",
-    question: "Where did you spend your childhood?",
-    answer: "Guwahati",
-    options: ["Guwahati", "Shillong", "Imphal", "Agartala"],
-    format: "multiple-choice",
-  },
+export function mapPersonalizationToMemoryQuestions(
+  rows: PersonalizationQuestion[]
+): MemoryQuestion[] {
+  return rows.map((q) => ({
+    id: q.id,
+    category: q.category,
+    question: q.question,
+    answer: q.answer,
+    options: q.options,
+    format: q.format,
+    image: q.image,
+    audio: q.audio,
+  }));
+}
 
-  {
-    id: "personal-1",
-    category: "personal",
-    question: "What was your profession?",
-    answer: "Teacher",
-    options: ["Teacher", "Doctor", "Engineer", "Farmer"],
-    format: "multiple-choice",
-  },
-
-  {
-    id: "food-1",
-    category: "food",
-    question: "What is your favourite food?",
-    answer: "Pitha",
-    options: ["Pitha", "Dosa", "Roti", "Idli"],
-    format: "multiple-choice",
-  },
-
-  {
-    id: "music-1",
-    category: "music",
-    question: "What type of music did you enjoy?",
-    answer: "Bihu songs",
-    options: ["Bihu songs", "Classical music", "Film songs", "Folk songs"],
-    format: "multiple-choice",
-  },
-
-  {
-    id: "hobbies-1",
-    category: "hobbies",
-    question: "What did you enjoy doing in your free time?",
-    answer: "Gardening",
-    options: ["Gardening", "Reading", "Cooking", "Painting"],
-    format: "multiple-choice",
-  },
-
-  {
-    id: "places-1",
-    category: "places",
-    question: "Which place did you enjoy visiting with your family?",
-    answer: "Shillong",
-    options: ["Shillong", "Delhi", "Mumbai", "Chennai"],
-    format: "multiple-choice",
-  },
-
-  {
-    id: "home-1",
-    category: "home",
-    question: "What did you usually drink in the morning?",
-    answer: "Tea",
-    options: ["Tea", "Coffee", "Juice", "Milk"],
-    format: "multiple-choice",
-  },
-];
+export async function loadMemoryQuestions(patientId: string): Promise<MemoryQuestion[]> {
+  try {
+    const { questionService } = await import("@/lib/supabase/services");
+    const rows = await questionService.getQuestions(patientId);
+    return mapPersonalizationToMemoryQuestions(rows);
+  } catch (e) {
+    console.error("loadMemoryQuestions:", e);
+    return [];
+  }
+}

@@ -1,39 +1,28 @@
-hi, just a basic main file
+# Memora — Dementia care companion
 
-Supabase integration
---------------------
+## Supabase setup
 
-This project can optionally use Supabase to store user routines and game results. To enable:
+1. Copy `.env.example` → `.env.local` and set `NEXT_PUBLIC_SUPABASE_ANON_KEY` from
+   Supabase → **Project Settings → API → anon public**.
+2. In the Supabase SQL Editor, run `supabase/seed.sql` (creates optional `caregivers`
+   table, seeds two patients under one caregiver, sample routines / family /
+   personalization questions, and open RLS policies for demo).
+3. Restart `npm run dev`.
 
-1. Copy `.env.example` to `.env.local` and fill in your Supabase project values.
+## How data flows
 
-2. Create the following tables in your Supabase project (example SQL):
+| Caregiver dashboard | Supabase table | Consumed by |
+|---------------------|----------------|-------------|
+| Profile → Daily routine | `routines` | Routine Ordering + Routine World |
+| Profile → Family members | `family_members` | Family Tree (fixed positions by relationship) |
+| Profile → Personalization Qs | `personalization_questions` | Memory Map |
+| Memories | `diary_entries` | Memories page |
+| Reminders | `reminders` | Reminders + overview |
+| Progress / overview | `cognitive_metrics`, `game_sessions`, `caregiver_alerts` | Charts & activity |
+| Games catalog | `games` | Games page toggles |
 
-```sql
-create table routines (
-	id text primary key,
-	patient_id text,
-	label text,
-	emoji text,
-	location text,
-	description text,
-	"order" int
-);
+### RBAC / patient switcher
 
-create table routine_results (
-	id uuid primary key default gen_random_uuid(),
-	patient_id text,
-	game_id text,
-	score int,
-	accuracy int,
-	attempts int,
-	response_time int,
-	difficulty int,
-	hints_used int,
-	completed boolean,
-	timestamp timestamptz,
-	challenges jsonb
-);
-```
-
-3. Restart the dev server (`npm run dev`). When Supabase is configured the app will fetch routines and persist results; otherwise it falls back to bundled demo data.
+- Caregivers are linked via `patients.caregiver_id` (and optional `caregivers` table).
+- Header dropdown lists all patients for the logged-in caregiver.
+- Switching patient reloads every dashboard query scoped to that `patient_id`.

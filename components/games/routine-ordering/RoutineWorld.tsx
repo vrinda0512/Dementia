@@ -18,22 +18,17 @@ type RoutineWorldProps = {
   showMemoryTrail?: boolean;
 };
 
-const positions: Record<string, string> = {
-  "wake-up":
-    "left-[8%] bottom-[27%]",
-
-  "brush-teeth":
-    "left-[31%] bottom-[29%]",
-
-  tea:
-    "right-[29%] bottom-[30%]",
-
-  medicine:
-    "right-[8%] bottom-[48%]",
-
-  breakfast:
-    "right-[14%] bottom-[8%]",
-};
+/** Slot positions by step order index so any routine from Supabase maps onto the world. */
+const SLOT_POSITIONS = [
+  "left-[8%] bottom-[27%]",
+  "left-[31%] bottom-[29%]",
+  "right-[29%] bottom-[30%]",
+  "right-[8%] bottom-[48%]",
+  "right-[14%] bottom-[8%]",
+  "left-[48%] bottom-[18%]",
+  "left-[18%] bottom-[8%]",
+  "right-[40%] bottom-[45%]",
+];
 
 export default function RoutineWorld({
   routine,
@@ -162,14 +157,11 @@ export default function RoutineWorld({
 
       </div>
 
-      {/* OBJECTS */}
-      {routine.map((step) => {
-
-        const selected =
-          selectedIds.includes(step.id);
-
-        const isTarget =
-          targetId === step.id;
+      {/* OBJECTS — positioned by order so caregiver-defined routines appear correctly */}
+      {routine.map((step, index) => {
+        const selected = selectedIds.includes(step.id);
+        const isTarget = targetId === step.id;
+        const slot = SLOT_POSITIONS[index % SLOT_POSITIONS.length];
 
         return (
           <button
@@ -179,7 +171,7 @@ export default function RoutineWorld({
             onClick={() => onSelect(step)}
             className={`absolute z-30 flex h-24 w-24 flex-col items-center justify-center rounded-3xl border-4 transition-all duration-300
 
-              ${positions[step.id] ?? "left-1/2 top-1/2"}
+              ${slot}
 
               ${
                 selected

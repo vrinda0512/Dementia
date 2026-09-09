@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useMemories } from "@/lib/hooks/use-memories";
+import { useAppStore } from "@/lib/stores/app-store";
 import { generateMemoryActivity } from "@/lib/services/memory-game-generator";
 import type { Memory, GeneratedActivity } from "@/lib/types";
 import { Heart, Plus, Sparkles, Calendar, Users, Image as ImageIcon, CheckCircle2 } from "lucide-react";
 
 export default function CaregiverMemoriesPage() {
+  const patient = useAppStore((s) => s.patient);
   const { data: memories, addMemory } = useMemories();
   const [selectedMemoryForActivity, setSelectedMemoryForActivity] = useState<Memory | null>(null);
   const [activityPreview, setActivityPreview] = useState<GeneratedActivity | null>(null);
@@ -57,7 +59,7 @@ export default function CaregiverMemoriesPage() {
       {isAddedToast && (
         <div className="fixed top-20 right-8 z-50 bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2 font-bold animate-bounce">
           <CheckCircle2 className="w-5 h-5" />
-          <span>Activity added to Meena's patient home queue!</span>
+          <span>Activity added to {patient?.name || "patient"}&apos;s home queue!</span>
         </div>
       )}
 
@@ -69,7 +71,8 @@ export default function CaregiverMemoriesPage() {
             <span>Personalized Patient Memories</span>
           </h1>
           <p className="text-sm font-semibold text-slate-500 mt-1">
-            Create real memories to generate customized cognitive games for Meena.
+            Create real memories to generate customized cognitive games for{" "}
+            {patient?.name || "the patient"}.
           </p>
         </div>
 

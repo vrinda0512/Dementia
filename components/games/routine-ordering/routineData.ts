@@ -1,60 +1,20 @@
 import { RoutineStep } from "./types";
 
-export const morningRoutine: RoutineStep[] = [
-  {
-    id: "wake-up",
-    label: "Wake Up",
-    emoji: "/wake%20up%20emoji.jpg",
-    location: "Bedroom",
-    description: "You wake up and begin your morning.",
-  },
-
-  {
-    id: "brush-teeth",
-    label: "Brush Teeth",
-    emoji: "/bathroom%20emoji.jpg",
-    location: "Bathroom",
-    description: "You freshen up in the bathroom.",
-  },
-
-  {
-    id: "tea",
-    label: "Have Tea",
-    emoji: "/have%20tea%20emoji.jpg",
-    location: "Kitchen",
-    description: "You sit down and enjoy your morning tea.",
-  },
-
-  {
-    id: "medicine",
-    label: "Take Medicine",
-    emoji: "/medicine%20icon.jpg",
-    location: "Medicine Shelf",
-    description: "You take your morning medicine.",
-  },
-
-  {
-    id: "breakfast",
-    label: "Have Breakfast",
-    emoji: "🍽️",
-    location: "Breakfast Table",
-    description: "You sit down for breakfast.",
-  },
-];
-
 /**
- * Load the morning routine from Supabase if available, otherwise fall back
- * to the bundled `morningRoutine` constant.
+ * Load the patient's routine from Supabase `routines` table.
+ * Returns [] when empty or unavailable (no silent hardcoded swap when DB is configured).
  */
 export async function loadMorningRoutine(patientId?: string): Promise<RoutineStep[]> {
   try {
-    const { getSupabaseClient } = await import("../../../lib/supabaseClient");
+    const { getSupabaseClient } = await import("@/lib/supabaseClient");
+    const { isSupabaseConfigured } = await import("@/lib/supabase/config");
     const supabase = getSupabaseClient();
 
-    if (!supabase) return morningRoutine;
+    if (!supabase || !isSupabaseConfigured()) {
+      console.warn("Supabase not configured — no routines loaded");
+      return [];
+    }
 
-    // Expect a table `routines` with columns matching your schema:
-    // id, patient_id, label, emoji, location, description, time_of_day, step_order, active
     let query = supabase
       .from("routines")
       .select(
@@ -71,12 +31,11 @@ export async function loadMorningRoutine(patientId?: string): Promise<RoutineSte
 
     if (error) {
       console.error("Supabase error fetching routines:", error);
-      return morningRoutine;
+      return [];
     }
 
-    if (!data || data.length === 0) return morningRoutine;
+    if (!data || data.length === 0) return [];
 
-    // Supabase returns generic `any[]` rows; coerce to RoutineStep[]
     return (data as any[]).map((row) => ({
       id: String(row.id),
       label: String(row.label),
@@ -89,6 +48,9 @@ export async function loadMorningRoutine(patientId?: string): Promise<RoutineSte
     }));
   } catch (e) {
     console.error("Failed to load routines from Supabase:", e);
-    return morningRoutine;
+    return [];
   }
 }
+
+/** @deprecated Kept for type imports; prefer DB-backed loadMorningRoutine. */
+export const morningRoutine: RoutineStep[] = [];

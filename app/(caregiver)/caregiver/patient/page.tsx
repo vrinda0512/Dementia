@@ -38,7 +38,7 @@ export default function CaregiverPatientPage() {
 
   // Form states - Family Member
   const [familyName, setFamilyName] = useState("");
-  const [familyRel, setFamilyRel] = useState("");
+  const [familyRel, setFamilyRel] = useState("mother");
   const [familyPhoto, setFamilyPhoto] = useState("");
 
   // Form states - Routine
@@ -58,6 +58,16 @@ export default function CaregiverPatientPage() {
   const [qImage, setQImage] = useState("");
   const [qAudio, setQAudio] = useState("");
 
+  const RELATIONSHIP_OPTIONS = [
+    "grandmother",
+    "grandfather",
+    "mother",
+    "father",
+    "sister",
+    "me",
+    "brother",
+  ] as const;
+
   const handleAddFamily = (e: React.FormEvent) => {
     e.preventDefault();
     if (!familyName || !familyRel) return;
@@ -76,7 +86,6 @@ export default function CaregiverPatientPage() {
     e.preventDefault();
     if (!routineLabel) return;
     addRoutine.mutate({
-      patientId: patient?.id || "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
       label: routineLabel,
       emoji: routineEmoji,
       description: routineDesc,
@@ -398,7 +407,9 @@ export default function CaregiverPatientPage() {
               </span>
               <h3 className="text-lg font-extrabold text-slate-900">Caregiver Portal Access</h3>
               <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                Full CRUD privileges to add routines, family member profiles, personalization memory questions, and monitor patient cognitive performance metrics.
+                Full CRUD on routines, family members, personalization questions, reminders,
+                memories, and games for every patient linked via <code>patients.caregiver_id</code>.
+                Use the header dropdown to switch patients — all dashboard data reloads for that profile.
               </p>
             </div>
 
@@ -408,9 +419,20 @@ export default function CaregiverPatientPage() {
               </span>
               <h3 className="text-lg font-extrabold text-slate-900">Patient Companion Access</h3>
               <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                Distraction-free interface for playing memory games, reviewing daily routines, viewing family photos, and receiving gentle voice & text reminders.
+                Read-only companion experience: play games fed by caregiver data, view reminders,
+                and journal. Cannot edit another patient&apos;s profile or setup tabs.
               </p>
             </div>
+          </div>
+
+          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs text-slate-600 font-medium">
+            Active patient id:{" "}
+            <span className="font-mono font-bold text-slate-900">{patient?.id || "—"}</span>
+            {" · "}
+            Caregiver id:{" "}
+            <span className="font-mono font-bold text-slate-900">
+              {patient?.caregiverId || "—"}
+            </span>
           </div>
         </div>
       )}
@@ -547,14 +569,18 @@ export default function CaregiverPatientPage() {
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
                   Relationship
                 </label>
-                <input
-                  type="text"
+                <select
                   value={familyRel}
                   onChange={(e) => setFamilyRel(e.target.value)}
-                  placeholder="e.g. Daughter"
                   required
                   className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-rose-500"
-                />
+                >
+                  {RELATIONSHIP_OPTIONS.map((rel) => (
+                    <option key={rel} value={rel}>
+                      {rel}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>

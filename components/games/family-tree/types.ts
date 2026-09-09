@@ -3,16 +3,16 @@ export type FamilyRelationship =
   | "grandmother"
   | "father"
   | "mother"
+  | "brother"
+  | "sister"
+  | "me"
   | "daughter"
   | "son"
   | "granddaughter"
   | "grandson"
   | "uncle"
   | "aunt"
-  | "brother"
-  | "sister"
-  | "cousin"
-  | "me";
+  | "cousin";
 
 export interface FamilyMember {
   id: string;

@@ -1,51 +1,47 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { reminderService } from "@/lib/supabase/services";
+import { useActivePatientId } from "@/lib/stores/app-store";
 import type { Reminder } from "@/lib/types";
 
 export function useReminders() {
+  const patientId = useActivePatientId();
   const queryClient = useQueryClient();
 
   const query = useQuery<Reminder[]>({
-    queryKey: ["reminders"],
-    queryFn: async () => {
-      return await reminderService.getReminders();
-    },
+    queryKey: ["reminders", patientId],
+    queryFn: async () => reminderService.getReminders(patientId),
+    enabled: Boolean(patientId),
   });
 
   const toggleReminder = useMutation({
     mutationFn: async (id: string) => {
       const current = query.data?.find((r) => r.id === id);
-      if (current) {
-        current.completed = !current.completed;
-      }
-      return current;
+      if (!current) return false;
+      return reminderService.toggleReminder(id, !current.completed);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reminders"] });
+      queryClient.invalidateQueries({ queryKey: ["reminders", patientId] });
     },
   });
 
   const addReminder = useMutation({
-    mutationFn: async (newRem: Omit<Reminder, "id" | "patientId" | "completed">) => {
-      const created: Reminder = {
-        id: `rem-${Date.now()}`,
-        patientId: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
-        completed: false,
+    mutationFn: async (
+      newRem: Omit<Reminder, "id" | "patientId" | "completed">
+    ) => {
+      return reminderService.addReminder({
         ...newRem,
-      };
-      return created;
+        patientId,
+      });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reminders"] });
+      queryClient.invalidateQueries({ queryKey: ["reminders", patientId] });
     },
   });
 
   const deleteReminder = useMutation({
-    mutationFn: async (id: string) => {
-      return true;
-    },
+    mutationFn: async (id: string) => reminderService.deleteReminder(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reminders"] });
+      queryClient.invalidateQueries({ queryKey: ["reminders", patientId] });
     },
   });
 
