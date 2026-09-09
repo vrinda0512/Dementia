@@ -14,35 +14,35 @@ function CaregiverSessionBootstrap({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     let cancelled = false;
 
-    async function ensureSession() {
-      if (role === "caregiver" && caregiver && patient) return;
+    // async function ensureSession() {
+    //   if (role === "caregiver" && caregiver && patient) return;
 
-      const caregiverId = caregiver?.id || DEFAULT_CAREGIVER_ID;
-      const profile =
-        (await caregiverService.getCaregiver(caregiverId)) || {
-          id: caregiverId,
-          name: "Dr. Ananya Sharma",
-          email: "ananya@memora.care",
-          role: "caregiver",
-        };
+    //   const caregiverId = caregiver?.id || DEFAULT_CAREGIVER_ID;
+    //   const profile =
+    //     (await caregiverService.getCaregiver(caregiverId)) || {
+    //       id: caregiverId,
+    //       name: "Dr. Ananya Sharma",
+    //       email: "ananya@memora.care",
+    //       role: "caregiver",
+    //     };
 
-      let patients = await patientService.getPatientsForCaregiver(caregiverId);
-      if (patients.length === 0) {
-        patients = await patientService.getAllPatients();
-      }
+    //   let patients = await patientService.getPatientsForCaregiver(caregiverId);
+    //   if (patients.length === 0) {
+    //     patients = await patientService.getAllPatients();
+    //   }
 
-      if (cancelled) return;
+    //   if (cancelled) return;
 
-      setRole("caregiver");
-      setCaregiver(profile);
-      setPatients(patients);
-      if (patients.length > 0) {
-        const keep = patient && patients.some((p) => p.id === patient.id);
-        if (!keep) setPatient(patients[0]);
-      }
-    }
+    //   setRole("caregiver");
+    //   setCaregiver(profile);
+    //   setPatients(patients);
+    //   if (patients.length > 0) {
+    //     const keep = patient && patients.some((p) => p.id === patient.id);
+    //     if (!keep) setPatient(patients[0]);
+    //   }
+    // }
 
-    ensureSession();
+    // ensureSession();
     return () => {
       cancelled = true;
     };
