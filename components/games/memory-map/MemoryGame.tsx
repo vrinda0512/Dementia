@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { MemoryCategoryInfo, MemoryQuestion } from "./types";
+import { VoiceButton } from "@/features/shared/components/voice-button";
 
 interface MemoryGameProps {
   category: MemoryCategoryInfo;
@@ -163,6 +164,16 @@ export default function MemoryGame({
             <p className="mt-5 text-2xl font-bold leading-relaxed text-slate-800 md:text-3xl">
               {currentQuestion.question}
             </p>
+            <div className="mt-4">
+              <VoiceButton
+                textToSpeak={showResult
+                  ? isCurrentAnswerCorrect
+                    ? "Wonderful. You remembered it."
+                    : `That is okay. The answer is ${currentQuestion.answer}. Let us remember it together.`
+                  : currentQuestion.question}
+                size="sm"
+              />
+            </div>
           </div>
 
           {/* Multiple Choice */}
@@ -190,19 +201,21 @@ export default function MemoryGame({
                   }
 
                   return (
-                    <button
-                      key={option}
-                      onClick={() => handleAnswer(option)}
-                      disabled={showResult}
-                      className={`min-h-[64px] rounded-2xl border-2 px-5 py-4 text-left text-lg font-semibold transition ${buttonStyle}`}
-                    >
-                      <span className="flex items-center justify-between">
-                        <span>{option}</span>
+                    <div key={option} className="flex items-stretch gap-2">
+                      <button
+                        onClick={() => handleAnswer(option)}
+                        disabled={showResult}
+                        className={`min-h-[64px] flex-1 rounded-2xl border-2 px-5 py-4 text-left text-lg font-semibold transition ${buttonStyle}`}
+                      >
+                        <span className="flex items-center justify-between">
+                          <span>{option}</span>
 
-                        {isCorrect && <span>✓</span>}
-                        {isWrong && <span>×</span>}
-                      </span>
-                    </button>
+                          {isCorrect && <span>✓</span>}
+                          {isWrong && <span>×</span>}
+                        </span>
+                      </button>
+                      <VoiceButton textToSpeak={option} iconOnly size="sm" className="self-center !bg-emerald-600 !border-emerald-500 hover:!bg-emerald-700" />
+                    </div>
                   );
                 })}
               </div>

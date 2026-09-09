@@ -5,6 +5,7 @@ import { memoryCategories, loadMemoryQuestions } from "./memoryData";
 import { MemoryCategory, MemoryQuestion } from "./types";
 import MemoryGame from "./MemoryGame";
 import { useActivePatientId } from "@/lib/stores/app-store";
+import { VoiceButton } from "@/features/shared/components/voice-button";
 
 export default function MemoryMap() {
   const patientId = useActivePatientId();
@@ -63,6 +64,12 @@ export default function MemoryMap() {
             <p className="mt-1 text-base text-slate-600 md:text-lg">
               Explore the places that hold your memories.
             </p>
+            <div className="mt-3">
+              <VoiceButton
+                textToSpeak="Choose a hill to explore a familiar memory. Take your time and listen carefully."
+                size="sm"
+              />
+            </div>
           </div>
 
           <div className="hidden rounded-full bg-white/80 px-5 py-3 shadow-sm md:block">

@@ -5,6 +5,7 @@ import { DiaryCover } from "./DiaryCover";
 import { DiaryPages } from "./DiaryPages";
 import styles from "./JournalDiary.module.css";
 import type { DiaryStage } from "./types";
+import type { SpeechRecordingStatus } from "@/lib/hooks/use-sarvam-stt";
 
 type DiarySceneProps = {
   stage: DiaryStage;
@@ -13,10 +14,11 @@ type DiarySceneProps = {
   onClose: () => void;
   onEntryChange: (value: string) => void;
   onVoicePress: () => void;
-  showVoiceHint: boolean;
+  voiceStatus: SpeechRecordingStatus;
+  voiceMessage: string;
 };
 
-export function DiaryScene({ stage, entry, onOpen, onClose, onEntryChange, onVoicePress, showVoiceHint }: DiarySceneProps) {
+export function DiaryScene({ stage, entry, onOpen, onClose, onEntryChange, onVoicePress, voiceStatus, voiceMessage }: DiarySceneProps) {
   const isClosed = stage === "closed";
   const isWritingReady = stage === "open";
 
@@ -53,7 +55,7 @@ export function DiaryScene({ stage, entry, onOpen, onClose, onEntryChange, onVoi
         <div className={styles.diaryShell}>
           <div className={styles.diarySpine} aria-hidden="true" />
           <div className={styles.diaryBook}>
-            <DiaryPages entry={entry} onEntryChange={onEntryChange} onVoicePress={onVoicePress} showVoiceHint={showVoiceHint} isWritingActive={isWritingReady} />
+            <DiaryPages entry={entry} onEntryChange={onEntryChange} onVoicePress={onVoicePress} voiceStatus={voiceStatus} voiceMessage={voiceMessage} isWritingActive={isWritingReady} />
             <button className={styles.coverButton} type="button" onClick={onOpen} disabled={!isClosed} aria-label="Open diary">
               <DiaryCover />
             </button>

@@ -1,40 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { Volume2, VolumeX } from "lucide-react";
+import { LoaderCircle, Volume2, VolumeX } from "lucide-react";
+import { useSarvamTts } from "@/lib/hooks/use-sarvam-tts";
 
 interface VoiceButtonProps {
   textToSpeak: string;
   className?: string;
   size?: "sm" | "md" | "lg";
+  iconOnly?: boolean;
 }
 
-export function VoiceButton({ textToSpeak, className = "", size = "md" }: VoiceButtonProps) {
-  const [isSpeaking, setIsSpeaking] = useState(false);
-
-  const speak = () => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
-      alert("Voice playback is not supported on this browser.");
-      return;
-    }
-
-    if (isSpeaking) {
-      window.speechSynthesis.cancel();
-      setIsSpeaking(false);
-      return;
-    }
-
-    window.speechSynthesis.cancel(); // Clear any previous queue
-    const utterance = new SpeechSynthesisUtterance(textToSpeak);
-    utterance.rate = 0.85; // Slightly slower, calm pace for elderly users
-    utterance.pitch = 1.0;
-
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
-
-    setIsSpeaking(true);
-    window.speechSynthesis.speak(utterance);
-  };
+export function VoiceButton({ textToSpeak, className = "", size = "md", iconOnly = false }: VoiceButtonProps) {
+  const { speak, stop, status, message } = useSarvamTts();
+  const isSpeaking = status === "speaking";
+  const isRequesting = status === "requesting";
 
   const sizeClasses = {
     sm: "px-3 py-1.5 text-sm gap-1.5",
@@ -43,23 +22,30 @@ export function VoiceButton({ textToSpeak, className = "", size = "md" }: VoiceB
   };
 
   return (
-    <button
-      type="button"
-      onClick={speak}
-      className={`inline-flex items-center justify-center transition-all transform active:scale-95 shadow-md bg-amber-500 hover:bg-amber-600 text-white border-2 border-amber-400 focus:outline-none focus:ring-4 focus:ring-amber-200 ${sizeClasses[size]} ${className}`}
-      aria-label="Listen to voice prompt"
-    >
-      {isSpeaking ? (
-        <>
-          <VolumeX className="w-6 h-6 animate-pulse" />
-          <span>Stop Listening</span>
-        </>
-      ) : (
-        <>
-          <Volume2 className="w-6 h-6" />
-          <span>🔊 Tap to Listen</span>
-        </>
-      )}
-    </button>
+    <span className="inline-flex max-w-xs flex-col items-center gap-1.5">
+      <button
+        type="button"
+        onClick={() => (isSpeaking ? stop() : void speak(textToSpeak))}
+        disabled={isRequesting}
+        className={`inline-flex items-center justify-center transition-all transform active:scale-95 shadow-md bg-amber-500 hover:bg-amber-600 text-white border-2 border-amber-400 focus:outline-none focus:ring-4 focus:ring-amber-200 disabled:cursor-wait disabled:opacity-70 ${iconOnly ? "h-11 w-11 rounded-full p-0" : sizeClasses[size]} ${className}`}
+        aria-label={isSpeaking ? "Stop voice prompt" : "Listen to voice prompt"}
+        title={isSpeaking ? "Stop voice prompt" : "Listen to voice prompt"}
+      >
+        {isRequesting ? (
+          <LoaderCircle className="w-5 h-5 animate-spin" />
+        ) : isSpeaking ? (
+          <>
+            <VolumeX className="w-6 h-6 animate-pulse" />
+            {!iconOnly && <span>Stop listening</span>}
+          </>
+        ) : (
+          <>
+            <Volume2 className="w-6 h-6" />
+            {!iconOnly && <span>Listen</span>}
+          </>
+        )}
+      </button>
+      {message && <span className="text-center text-xs font-semibold text-amber-800" role="status">{message}</span>}
+    </span>
   );
 }
