@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useReminders } from "@/lib/hooks/use-reminders";
-import { Bell, Plus, Clock, Trash2, CheckCircle2, RefreshCw } from "lucide-react";
+import { Bell, Plus, Clock, Trash2, CheckCircle2 } from "lucide-react";
 import type { Reminder } from "@/lib/types";
 
 export default function CaregiverRemindersPage() {
@@ -13,7 +13,6 @@ export default function CaregiverRemindersPage() {
   const [description, setDescription] = useState("");
   const [scheduledTime, setScheduledTime] = useState("10:00 AM");
   const [type, setType] = useState("medicine");
-  const [recurring, setRecurring] = useState("Daily");
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,8 +22,6 @@ export default function CaregiverRemindersPage() {
       title,
       description,
       scheduledTime,
-      //recurring,
-      //active: true,
     });
 
     setTitle("");
@@ -105,12 +102,6 @@ export default function CaregiverRemindersPage() {
                   <Clock className="w-3.5 h-3.5 text-slate-400" />
                   {rem.scheduledTime}
                 </span>
-                {rem.recurring && (
-                  <span className="inline-flex items-center gap-1 text-amber-700 bg-amber-50 px-3 py-1 rounded-lg border border-amber-200">
-                    <RefreshCw className="w-3.5 h-3.5 text-amber-500" />
-                    {rem.recurring}
-                  </span>
-                )}
               </div>
             </div>
 
@@ -178,7 +169,7 @@ export default function CaregiverRemindersPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div>
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
                     Scheduled Time
@@ -189,19 +180,6 @@ export default function CaregiverRemindersPage() {
                     onChange={(e) => setScheduledTime(e.target.value)}
                     placeholder="10:00 AM"
                     required
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Recurrence
-                  </label>
-                  <input
-                    type="text"
-                    value={recurring}
-                    onChange={(e) => setRecurring(e.target.value)}
-                    placeholder="Daily"
                     className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900"
                   />
                 </div>
