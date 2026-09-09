@@ -1,0 +1,18 @@
+{
+  "name": "whatsapp-reminder-service",
+  "version": "1.0.0",
+  "description": "Standalone BullMQ + Twilio WhatsApp reminder microservice for Render deployment",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "bullmq": "^5.41.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "ioredis": "^5.5.0",
+    "twilio": "^5.4.3"
+  }
+}

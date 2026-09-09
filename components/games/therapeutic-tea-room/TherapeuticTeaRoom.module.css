@@ -1,0 +1,222 @@
+.game {
+  min-height: 100dvh;
+  position: relative;
+  overflow: hidden;
+  background: #829a85;
+  color: #f8f3e7;
+}
+
+.worldHost {
+  position: absolute;
+  inset: 0;
+  touch-action: none;
+}
+
+.worldHost :global(.therapeutic-tea-room-canvas) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  outline: none;
+}
+
+.worldHost :global(.therapeutic-tea-room-canvas):active {
+  cursor: grabbing;
+}
+
+.topbar {
+  position: absolute;
+  z-index: 3;
+  inset: 0 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem clamp(1rem, 3vw, 2.2rem);
+  background: rgba(58, 71, 54, 0.58);
+  border-bottom: 1px solid rgba(252, 241, 210, 0.22);
+  backdrop-filter: blur(12px);
+}
+
+.brand,
+.controls,
+.endButton,
+.beginButton,
+.returnButton {
+  display: flex;
+  align-items: center;
+}
+
+.brand {
+  gap: 0.65rem;
+  color: #fff4da;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.brandMark {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  color: #294935;
+  background: #e9c978;
+  border-radius: 50% 50% 50% 16%;
+  transform: rotate(-12deg);
+}
+
+.controls { gap: 0.55rem; }
+
+.iconButton,
+.endButton,
+.returnButton {
+  border: 1px solid rgba(255, 244, 218, 0.42);
+  color: #fff4da;
+  background: rgba(34, 49, 37, 0.42);
+  min-height: 2.45rem;
+  transition: background-color 180ms ease, transform 180ms ease;
+}
+
+.iconButton {
+  width: 2.45rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+}
+
+.endButton,
+.returnButton {
+  gap: 0.4rem;
+  padding: 0 0.82rem;
+  border-radius: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.iconButton:hover,
+.endButton:hover,
+.returnButton:hover { background: rgba(31, 59, 40, 0.76); }
+
+.welcome {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 5rem 1.5rem 2rem;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(29, 43, 33, 0.48), transparent 62%);
+}
+
+.welcomeCopy {
+  width: min(33rem, 94vw);
+  padding: clamp(1.4rem, 4vw, 2.8rem);
+  align-self: center;
+  justify-self: start;
+  margin-left: clamp(0rem, 5vw, 4rem);
+  color: #fff7e7;
+  pointer-events: auto;
+  text-shadow: 0 2px 16px rgba(24, 34, 27, 0.38);
+}
+
+.eyebrow {
+  color: #f4d080;
+  font-size: 0.72rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.welcomeCopy h1 {
+  margin: 0.65rem 0 0.9rem;
+  max-width: 11ch;
+  font-family: Georgia, serif;
+  font-size: clamp(2.4rem, 4.8vw, 4.3rem);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: 0;
+}
+
+.welcomeCopy p {
+  max-width: 28rem;
+  margin: 0;
+  color: #f6edd9;
+  font-size: 1rem;
+  line-height: 1.62;
+}
+
+.beginButton {
+  gap: 0.55rem;
+  margin-top: 1.7rem;
+  padding: 0.88rem 1.1rem;
+  border: 0;
+  border-radius: 0.4rem;
+  background: #e5bf67;
+  color: #264431;
+  font-weight: 800;
+  box-shadow: 0 5px 0 rgba(73, 50, 23, 0.38);
+  transition: transform 180ms ease, background-color 180ms ease;
+}
+
+.beginButton:hover { background: #f0d283; transform: translateY(-2px); }
+.beginButton:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(73, 50, 23, 0.38); }
+
+.guidance {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: max(1.2rem, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  max-width: min(37rem, calc(100vw - 2rem));
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(255, 244, 218, 0.3);
+  background: rgba(38, 55, 42, 0.72);
+  color: #fff6e4;
+  border-radius: 0.35rem;
+  font-size: 0.86rem;
+  line-height: 1.4;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.hoverHint { color: #f6d381; font-weight: 700; }
+
+.returnButton {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 1.4rem;
+  transform: translateX(-50%);
+}
+
+.fallback {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  background: #dae3cf;
+  color: #284736;
+  padding: 2rem;
+}
+
+.fallbackContent { max-width: 30rem; text-align: center; }
+.fallbackContent h1 { margin: 0.75rem 0; font: 500 clamp(2rem, 5vw, 3.4rem) Georgia, serif; }
+.fallbackContent p { margin: 0; line-height: 1.6; color: #466151; }
+
+@media (max-width: 700px) {
+  .topbar { padding: 0.75rem 0.9rem; }
+  .brand { font-size: 0.67rem; letter-spacing: 0.06em; }
+  .welcome { align-items: end; padding: 5rem 0.2rem 5.5rem; background: linear-gradient(0deg, rgba(29, 43, 33, 0.66), transparent 67%); }
+  .welcomeCopy { margin-left: 0; padding: 1.15rem; }
+  .welcomeCopy h1 { font-size: 2.55rem; }
+  .welcomeCopy p { font-size: 0.92rem; }
+  .endButton { font-size: 0.72rem; padding: 0 0.68rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iconButton,
+  .endButton,
+  .returnButton,
+  .beginButton { transition: none; }
+}

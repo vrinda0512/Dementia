@@ -1,0 +1,312 @@
+.memory-book {
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-size: 1.05rem;
+  /* warm paper background with subtle texture (SVG) */
+  background-color: #fffaf0;
+  background-image: radial-gradient(rgba(0,0,0,0.02) 1px, transparent 1px), linear-gradient(120deg, #fffaf0 0%, #fff7ed 50%, #fffdfb 100%);
+  background-size: 60px 60px, cover;
+}
+
+.memory-book .room-label {
+  position: relative;
+  z-index: 60;
+  display: inline-block;
+  font-family: "Trebuchet MS", "Verdana", sans-serif;
+  font-size: 0.96rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  color: #1f2937;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.9);
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  white-space: nowrap;
+  max-width: 100%;
+  pointer-events: none;
+}
+
+.memory-book .rounded-2xl,
+.memory-book .rounded-3xl {
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(252,250,245,0.95));
+  border-color: rgba(240, 226, 206, 1);
+}
+
+.memory-book .shadow-2xl {
+  box-shadow: 0 30px 50px rgba(20,18,15,0.08), inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+.memory-book .memory-accent {
+  color: #b45309; /* warm amber */
+}
+
+/* Button contrast helpers inside the game so text remains visible */
+.memory-book .bg-slate-950,
+.memory-book .bg-slate-900,
+.memory-book .bg-slate-800 {
+  color: #ffffff !important;
+}
+
+.memory-book .bg-white,
+.memory-book .bg-slate-50,
+.memory-book .bg-amber-50 {
+  color: #111827 !important;
+}
+
+/* Make the routine world scale better on small screens */
+.memory-book [class*="aspect-"] {
+  max-height: 56vh;
+}
+
+/* small responsive tweak for preview sequence scroller */
+.memory-book .preview-sequence { display:flex; gap:8px; }
+
+@media (max-width: 640px) {
+  .memory-book .text-4xl { font-size: 1.6rem; }
+  .memory-book .text-5xl { font-size: 2rem; }
+  .memory-book [class*="aspect-"] { max-height: 40vh; }
+}
+
+/* Page turn animation to feel like flipping memory book pages */
+.memory-page {
+  perspective: 1200px;
+}
+
+.memory-page .page {
+  transform-origin: right center;
+  backface-visibility: hidden;
+}
+
+@keyframes pageFlip {
+  0% { transform: rotateY(0deg); }
+  30% { transform: rotateY(-85deg) translateX(8%); box-shadow: 0 30px 55px rgba(0,0,0,0.12); }
+  60% { transform: rotateY(-100deg) translateX(10%); }
+  100% { transform: rotateY(0deg); }
+}
+
+.page-flip {
+  animation: pageFlip 750ms cubic-bezier(.2,.9,.3,1);
+}
+
+/* Pop-in animation for objects and trail */
+@keyframes popIn {
+  0% { transform: scale(0.6); opacity: 0; }
+  60% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+.animate-pop-in {
+  animation: popIn 360ms cubic-bezier(.2,.9,.3,1) both;
+}
+
+/* memory pulse for target hint */
+@keyframes memoryPulse {
+  0% { box-shadow: 0 0 0 0 rgba(250,204,21,0.6); }
+  70% { box-shadow: 0 0 0 18px rgba(250,204,21,0); }
+  100% { box-shadow: 0 0 0 0 rgba(250,204,21,0); }
+}
+
+.animate-memory-pulse {
+  animation: memoryPulse 1.6s ease-in-out infinite;
+}
+
+/* gentle bob for the character */
+@keyframes characterBob {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+
+.animate-[character-bob_3s_ease-in-out_infinite], .character-bob {
+  animation: characterBob 3s ease-in-out infinite;
+}
+
+/* Mobile-specific: increase tappable area and scale objects slightly */
+@media (max-width: 640px) {
+  .relative.mx-auto.aspect-\[16\/9\] .z-30 {
+    height: 64px !important;
+    width: 64px !important;
+  }
+
+  .relative.mx-auto.aspect-\[16\/9\] .text-4xl {
+    font-size: 1.6rem;
+  }
+}
+
+/* Tablet / small laptop adjustments */
+@media (max-width: 1024px) {
+  .memory-page { padding: 32px 18px; }
+  .memory-page:before, .memory-page:after {
+    width: 80px;
+    background-size: cover, 80px 100%;
+  }
+
+  .memory-page .page {
+    width: min(900px, calc(100% - 160px));
+    padding: 22px;
+  }
+
+  .memory-book [class*="aspect-"] {
+    max-height: 48vh;
+  }
+}
+
+/* Mobile adjustments: hide covers, full-width page, larger tappable controls */
+@media (max-width: 640px) {
+  .memory-page { padding: 16px 10px; }
+  .memory-page:before,
+  .memory-page:after {
+    display: none;
+  }
+
+  .memory-page .page {
+    width: 100% !important;
+    padding: 16px !important;
+    border-radius: 14px;
+    box-shadow: 0 18px 40px rgba(15,10,5,0.22), inset 0 1px 0 rgba(255,255,255,0.85);
+  }
+
+  .memory-book .text-4xl { font-size: 1.4rem; }
+  .memory-book .text-5xl { font-size: 1.8rem; }
+
+  .memory-book button {
+    padding: 14px 16px !important;
+    font-size: 1rem !important;
+  }
+
+  .memory-book [class*="aspect-"] { max-height: 36vh; }
+
+  /* make page flip origin centered on small screens for a nicer effect */
+  .page-flip { transform-origin: center !important; }
+}
+
+/* Ensure button labels remain visible across backgrounds */
+.memory-book button { font-weight: 800; color: #111827 !important; }
+
+/* Level-specific page artwork (simple gradients and decorative corners) */
+.level-1 {
+  background-image: radial-gradient(circle at 10% 10%, rgba(255,240,220,0.8) 0%, transparent 20%), linear-gradient(120deg, #fff8ef 0%, #fff2e0 100%);
+}
+
+.level-2 {
+  background-image: radial-gradient(circle at 90% 12%, rgba(255,245,230,0.7) 0%, transparent 20%), linear-gradient(120deg, #fff7f0 0%, #fff2e7 100%);
+}
+
+.level-3 {
+  background-image: radial-gradient(circle at 12% 88%, rgba(245,255,240,0.6) 0%, transparent 20%), linear-gradient(120deg, #f7fff6 0%, #eefbf0 100%);
+}
+
+.level-4 {
+  background-image: radial-gradient(circle at 88% 88%, rgba(250,245,255,0.6) 0%, transparent 20%), linear-gradient(120deg, #fbf7ff 0%, #f4efff 100%);
+}
+
+.level-5 {
+  background-image: radial-gradient(circle at 50% 10%, rgba(255,250,240,0.7) 0%, transparent 20%), linear-gradient(120deg, #fffaf6 0%, #fff3ea 100%);
+}
+
+/* Book cover and page container */
+.memory-page {
+  position: relative;
+  min-height: 100vh;
+  padding: 48px 36px;
+  /* visible hardback cover color */
+  background: linear-gradient(180deg, #7a4b2d 0%, #6a3f28 100%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+/* left cover / spine */
+.memory-page:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  background: linear-gradient(180deg, #6a3f28, #5b3625), url('/book-cover.svg');
+  background-size: cover, 120px 100%;
+  background-repeat: no-repeat, no-repeat;
+  box-shadow: inset -6px 0 10px rgba(0,0,0,0.25);
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  pointer-events: none;
+}
+
+/* right cover flap */
+.memory-page:after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  background: linear-gradient(180deg, #6a3f28, #5b3625);
+  box-shadow: inset 6px 0 10px rgba(0,0,0,0.18);
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  pointer-events: none;
+}
+
+.memory-page .page {
+  position: relative;
+  width: min(1100px, calc(100% - 260px));
+  background-color: #fbf6ee; /* warm paper */
+  /* ruled lines + left margin + speckle */
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.06) 0px,
+      rgba(0,0,0,0.06) 1px,
+      transparent 1px,
+      transparent 44px
+    ),
+    linear-gradient(90deg, rgba(255,80,70,0.06) 72px, transparent 72px),
+    radial-gradient(circle at 10% 10%, rgba(0,0,0,0.02), transparent 20%);
+  background-blend-mode: multiply, normal, overlay;
+  background-size: 100% 44px, 100% 100%, cover;
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 40px 80px rgba(15,10,5,0.32), inset 0 1px 0 rgba(255,255,255,0.8);
+  overflow: hidden;
+  transition: transform 220ms ease;
+}
+
+/* sewn spine markers inside the left cover area */
+.memory-page .spine-markers {
+  position: absolute;
+  left: 48px;
+  top: 40px;
+  bottom: 40px;
+  width: 2px;
+  background-image: repeating-linear-gradient(180deg, rgba(255,255,255,0.14) 0 6px, transparent 6px 12px);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* page edge highlight */
+.memory-page .page:before {
+  content: "";
+  position: absolute;
+  right: -18px;
+  top: 12px;
+  bottom: 12px;
+  width: 18px;
+  background: linear-gradient(90deg, rgba(0,0,0,0.02), rgba(255,255,255,0.02));
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+  pointer-events: none;
+}
+
+/* subtle folded corner */
+.memory-page .page:after {
+  content: "";
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(0,0,0,0.02));
+  transform: rotate(12deg);
+  opacity: 0.6;
+  pointer-events: none;
+}
