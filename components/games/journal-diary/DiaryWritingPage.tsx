@@ -3,16 +3,18 @@
 import { useEffect, useMemo, useRef } from "react";
 import { VoiceButton } from "./VoiceButton";
 import styles from "./JournalDiary.module.css";
+import type { SpeechRecordingStatus } from "@/lib/hooks/use-sarvam-stt";
 
 type DiaryWritingPageProps = {
   entry: string;
   onEntryChange: (value: string) => void;
   onVoicePress: () => void;
-  showVoiceHint: boolean;
+  voiceStatus: SpeechRecordingStatus;
+  voiceMessage: string;
   isActive: boolean;
 };
 
-export function DiaryWritingPage({ entry, onEntryChange, onVoicePress, showVoiceHint, isActive }: DiaryWritingPageProps) {
+export function DiaryWritingPage({ entry, onEntryChange, onVoicePress, voiceStatus, voiceMessage, isActive }: DiaryWritingPageProps) {
   const entryRef = useRef<HTMLTextAreaElement>(null);
   const date = useMemo(
     () => new Intl.DateTimeFormat("en-IN", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(new Date()),
@@ -41,7 +43,7 @@ export function DiaryWritingPage({ entry, onEntryChange, onVoicePress, showVoice
         readOnly={!isActive}
         tabIndex={isActive ? 0 : -1}
       />
-      <VoiceButton onPress={onVoicePress} isShowingHint={showVoiceHint} />
+      <VoiceButton onPress={onVoicePress} status={voiceStatus} message={voiceMessage} />
       <span className={styles.pageNumber}>1</span>
     </div>
   );

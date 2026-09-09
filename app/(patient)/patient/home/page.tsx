@@ -5,6 +5,8 @@ import { VoiceButton } from "@/features/shared/components/voice-button";
 import { usePatient } from "@/lib/hooks/use-patient";
 import { useReminders } from "@/lib/hooks/use-reminders";
 import { useTranslation } from "@/lib/i18n/use-translation";
+import { useAppStore } from "@/lib/stores/app-store";
+import { PATIENT_LANGUAGES } from "@/lib/voice/languages";
 import { getGreeting } from "@/lib/utils";
 import { Play, Sparkles, CheckCircle2, MapPinned } from "lucide-react";
 
@@ -12,7 +14,21 @@ export default function PatientHomePage() {
   const { data: patient } = usePatient();
   const { data: reminders } = useReminders();
   const { t } = useTranslation();
+  const activeLanguage = useAppStore((state) => state.activeLanguage);
+  const setLanguage = useAppStore((state) => state.setLanguage);
   const greeting = getGreeting();
+  const isHindi = activeLanguage === "hi-IN";
+  const greetingText = greeting.includes("Afternoon")
+    ? t("goodAfternoon")
+    : greeting.includes("Evening")
+      ? t("goodEvening")
+      : t("goodMorning");
+  const reminderTitle = (type: string, title: string) => {
+    if (type === "medicine") return t("medicine");
+    if (type === "hydration") return t("hydration");
+    if (type === "walk") return t("walk");
+    return title;
+  };
 
   const activeReminders = reminders?.filter((r) => !r.completed) || [];
 
@@ -22,20 +38,49 @@ export default function PatientHomePage() {
       <div className="space-y-2">
         <div className="inline-flex items-center gap-2 bg-rose-100 text-rose-800 font-black text-sm px-4 py-1.5 rounded-full border border-rose-200 shadow-xs">
           <span>❤️</span>
-          <span>{t("goodMorning")}, {patient?.name || "Meena"}</span>
+          <span>{greetingText}, {patient?.name || "Meena"}</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
           "{t("letsDoTodayActivity")}"
         </h1>
         <p className="text-base text-slate-600 font-semibold max-w-md mx-auto">
-          A short, fun exercise to start your day with smile & clarity.
+          {isHindi
+            ? "मुस्कान और स्पष्टता के साथ दिन शुरू करने के लिए एक छोटा, आसान अभ्यास।"
+            : "A short, fun exercise to start your day with smile & clarity."}
         </p>
       </div>
+
+      <section className="mx-auto max-w-md text-left" aria-label="Language selection">
+        <p className="mb-2 text-sm font-extrabold text-slate-700">{isHindi ? "भाषा" : "Language"}</p>
+        <div className="grid grid-cols-3 gap-2 rounded-2xl border border-slate-200 bg-white/80 p-2 shadow-sm">
+          {PATIENT_LANGUAGES.map((language) => {
+            const selected = activeLanguage === language.code;
+
+            return (
+              <button
+                key={language.code}
+                type="button"
+                onClick={() => setLanguage(language.code)}
+                aria-pressed={selected}
+                className={`min-h-14 rounded-xl px-2 text-center text-sm font-extrabold transition focus:outline-none focus:ring-4 focus:ring-amber-200 ${
+                  selected
+                    ? "bg-amber-500 text-white shadow-sm"
+                    : "bg-slate-50 text-slate-700 hover:bg-amber-50"
+                }`}
+              >
+                {language.nativeLabel}
+              </button>
+            );
+          })}
+        </div>
+      </section>
 
       {/* Voice Assistant Playback Button */}
       <div>
         <VoiceButton
-          textToSpeak={`${greeting}, ${patient?.name || "Meena"}. Let's do today's memory game.`}
+          textToSpeak={isHindi
+            ? `${greetingText}, ${patient?.name || "Meena"}. आइए आज का याददाश्त का खेल खेलें।`
+            : `${greeting}, ${patient?.name || "Meena"}. Let's do today's memory game.`}
           size="lg"
         />
       </div>
@@ -49,10 +94,10 @@ export default function PatientHomePage() {
 
           <div>
             <span className="text-xs font-black uppercase tracking-widest text-amber-600 block">
-              Suggested Memory Activity
+              {isHindi ? "आज का सुझाया गया अभ्यास" : "Suggested Memory Activity"}
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
-              Routine Recall Game
+              {isHindi ? "दिनचर्या याद रखने का खेल" : "Routine Recall Game"}
             </h2>
           </div>
 
@@ -61,7 +106,7 @@ export default function PatientHomePage() {
             className="w-full patient-touch-btn bg-slate-900 hover:bg-slate-800 text-white flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-all text-xl"
           >
             <Play className="w-8 h-8 fill-white" />
-            <span>START GAME</span>
+            <span>{isHindi ? "खेल शुरू करें" : "START GAME"}</span>
           </Link>
         </div>
       </div>
@@ -73,7 +118,7 @@ export default function PatientHomePage() {
           className="inline-flex items-center gap-2 text-slate-700 hover:text-slate-900 font-black text-base bg-white/90 px-6 py-3 rounded-2xl border border-slate-200 shadow-md transition-all hover:bg-white"
         >
           <Sparkles className="w-5 h-5 text-amber-500" />
-          <span>See All Daily Activities →</span>
+          <span>{isHindi ? "सभी दैनिक गतिविधियां देखें →" : "See All Daily Activities →"}</span>
         </Link>
       </div>
 
@@ -99,7 +144,7 @@ export default function PatientHomePage() {
       <div className="max-w-md mx-auto bg-white/90 backdrop-blur-md rounded-3xl p-6 border border-slate-200/80 shadow-md space-y-4 text-left">
         <h3 className="text-lg font-black text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-2">
           <span>⏰</span>
-          <span>Today's Reminders</span>
+          <span>{t("todaysReminders")}</span>
         </h3>
 
         <div className="space-y-3">
@@ -118,7 +163,7 @@ export default function PatientHomePage() {
                 </span>
                 <div>
                   <h4 className={`font-black text-base ${rem.completed ? "line-through text-slate-500" : "text-slate-900"}`}>
-                    {rem.title}
+                    {reminderTitle(rem.type, rem.title)}
                   </h4>
                   <span className="text-xs font-bold text-slate-500">{rem.scheduledTime}</span>
                 </div>

@@ -36,7 +36,7 @@ export function SummaryCards() {
   const totalScore = list.reduce((acc, s) => acc + s.score, 0);
   const avgScore = list.length ? Math.round(totalScore / list.length) : 0;
   const gamesCompleted = list.filter((s) => s.completed).length;
-  const activeRemindersCount = reminders?.filter((r) => r.active !== false && !r.completed).length || 0;
+  const activeRemindersCount = reminders?.filter((r) => !r.completed).length || 0;
   const completedReminders = reminders?.filter((r) => r.completed).length || 0;
   const streakDays = computeStreak(list);
   const uniqueGames = new Set(list.map((s) => s.gameId)).size;

@@ -1,15 +1,17 @@
 import { DiaryWritingPage } from "./DiaryWritingPage";
 import styles from "./JournalDiary.module.css";
+import type { SpeechRecordingStatus } from "@/lib/hooks/use-sarvam-stt";
 
 type DiaryPagesProps = {
   entry: string;
   onEntryChange: (value: string) => void;
   onVoicePress: () => void;
-  showVoiceHint: boolean;
+  voiceStatus: SpeechRecordingStatus;
+  voiceMessage: string;
   isWritingActive: boolean;
 };
 
-export function DiaryPages({ entry, onEntryChange, onVoicePress, showVoiceHint, isWritingActive }: DiaryPagesProps) {
+export function DiaryPages({ entry, onEntryChange, onVoicePress, voiceStatus, voiceMessage, isWritingActive }: DiaryPagesProps) {
   return (
     <>
       <div className={styles.pageStack} aria-hidden="true">
@@ -26,7 +28,8 @@ export function DiaryPages({ entry, onEntryChange, onVoicePress, showVoiceHint, 
         entry={entry}
         onEntryChange={onEntryChange}
         onVoicePress={onVoicePress}
-        showVoiceHint={showVoiceHint}
+        voiceStatus={voiceStatus}
+        voiceMessage={voiceMessage}
         isActive={isWritingActive}
       />
     </>

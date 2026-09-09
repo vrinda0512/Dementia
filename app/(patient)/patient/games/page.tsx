@@ -3,10 +3,13 @@
 import Link from "next/link";
 import { VoiceButton } from "@/features/shared/components/voice-button";
 import { useTranslation } from "@/lib/i18n/use-translation";
+import { useAppStore } from "@/lib/stores/app-store";
 import { Play } from "lucide-react";
 
 export default function PatientGameSelectionPage() {
   const { t } = useTranslation();
+  const activeLanguage = useAppStore((state) => state.activeLanguage);
+  const isHindi = activeLanguage === "hi-IN";
 
   const games = [
     {
@@ -60,15 +63,15 @@ export default function PatientGameSelectionPage() {
     <div className="space-y-8 text-center py-4">
       <div>
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-          What would you like to do?
+          {t("whatWouldYouLikeToDo")}
         </h1>
         <p className="text-base text-slate-600 font-semibold mt-1">
-          Tap any game to begin.
+          {isHindi ? "शुरू करने के लिए कोई भी खेल दबाएं।" : "Tap any game to begin."}
         </p>
       </div>
 
       <div className="flex justify-center">
-        <VoiceButton textToSpeak="What would you like to do? Tap any activity to play." size="md" />
+        <VoiceButton textToSpeak={isHindi ? "आप क्या करना चाहेंगे? खेलने के लिए कोई भी गतिविधि दबाएं।" : "What would you like to do? Tap any activity to play."} size="md" />
       </div>
 
       {/* Game Cards - 2x2 grid on desktop, single column on mobile */}
@@ -86,6 +89,9 @@ export default function PatientGameSelectionPage() {
               <p className="text-xs font-semibold text-slate-600 leading-relaxed">
                 {g.subtitle}
               </p>
+              <div className="pt-1">
+                <VoiceButton textToSpeak={`${g.title}. ${g.subtitle}`} size="sm" />
+              </div>
             </div>
 
             <Link
